@@ -1,5 +1,10 @@
 .vscode/
 
+# Benchmarking pipeline: large binaries/models/outputs, not source
+/runtime/
+/models/
+/outputs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
