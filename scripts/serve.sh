@@ -3,14 +3,16 @@
 # OpenAI-compatible endpoint, hosting a GGUF model from models/.
 #
 # Usage:
-#   scripts/serve.sh [model-filename-in-models-dir]
+#   scripts/serve.sh [model-filename-in-models-dir] [extra llama-server args...]
 #   scripts/serve.sh gpt-oss-20b-F16.gguf
+#   scripts/serve.sh gemma-4-12b-it-Q8_0.gguf --reasoning off
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LLAMA_BIN="$(ls -d "$ROOT"/runtime/llama.cpp/llama-b*/ 2>/dev/null | sort -V | tail -1)"
 LLAMA_BIN="${LLAMA_BIN%/}"
 MODEL_FILE="${1:-shisa-v2-qwen2.5-32b.Q4_K_M.gguf}"
+if [ $# -gt 0 ]; then shift; fi
 MODEL="$ROOT/models/$MODEL_FILE"
 ALIAS="${MODEL_FILE%.gguf}"
 
@@ -26,4 +28,5 @@ exec "$LLAMA_BIN/llama-server" \
   -c 8192 \
   -ngl 99 \
   --host 127.0.0.1 \
-  --port 8080
+  --port 8080 \
+  "$@"
