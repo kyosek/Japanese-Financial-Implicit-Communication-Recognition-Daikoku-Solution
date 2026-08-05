@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://127.0.0.1:8080/apply-template -H 'Content-Type: application/json' -d '{\"messages\":[{\"role\":\"user\",\"content\":\"Hello, what is 2+2?\"}]}')",
+      "Bash(curl -s http://127.0.0.1:8080/completion -H 'Content-Type: application/json' -d '{\"prompt\":\"The capital of France is\",\"n_predict\":1,\"n_probs\":10,\"temperature\":1.0,\"top_k\":0,\"top_p\":1.0,\"min_p\":0.0,\"cache_prompt\":false}')",
+      "Bash(python3 -m json.tool)"
+    ]
+  }
+}

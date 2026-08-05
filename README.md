@@ -122,6 +122,43 @@ reasoning models in particular can blow through a small `--max-tokens`
 budget without ever emitting the final answer (see reasoning-model note
 above).
 
+### Log-prob verbalizer scoring (alternative to free generation)
+
+`bench/solve_logprob.py` scores each of the 5 label strings directly —
+P(label | prompt), via teacher-forced token log-probs against llama.cpp's
+raw `/completion` endpoint — instead of letting the model generate freely
+and parsing a label out of the text. Takes the argmax as the prediction and
+also reports a continuous score, Σk·P(k) over {+2..-2}. This can't produce
+an unparsed label, and unlike free generation it tells you *how* wrong a
+miss was: whether the model ranked the gold label a close second (a
+calibration/prior problem) or buried it near the bottom (a comprehension
+problem) — `bench/evaluate_logprob.py` reports gold-label rank histograms
+and mean P(gold) per class to answer exactly that.
+
+```bash
+./.venv/bin/python bench/solve_logprob.py --model shisa --out outputs/predictions_shisa_logprob.jsonl
+./.venv/bin/python bench/evaluate_logprob.py \
+  --predictions outputs/predictions_shisa_logprob.jsonl \
+  --report outputs/report_shisa_logprob.json
+
+# same --few-shot-k / --no-annotation-rules flags as solve.py, so results are comparable
+```
+
+It runs a 3-5 row cross-check against free generation by default
+(`--sanity-check-n`, 0 to skip) before the full pass — trust that agreement
+number before trusting a full run on a model you haven't scored before.
+**Reasoning/harmony-format models are the reason this check exists**:
+gpt-oss-20b's template mandates an analysis-channel preamble before any
+content can appear, so the label does not immediately follow the prompt and
+naive log-prob scoring there measures the wrong thing (every label looks
+equally, vanishingly unlikely). Confirmed to just work out of the box for
+gemma-4-12b-it (100% agreement with free generation in testing); verify
+qwen3/shisa/gpt-oss before trusting their numbers.
+
+`report_logprob.json` uses the same `n`/`correct`/`accuracy`/`unparsed`/
+`confusion` keys as `evaluate.py`'s report, so `bench/compare.py` can line
+up free-generation and log-prob-argmax accuracy side by side.
+
 ### Results (253 examples, temperature 0, with Appendix A.3 annotation rules)
 
 | model | zero-shot | few-shot (k=1, 5 shots) |
@@ -154,9 +191,11 @@ Notes:
 ### Layout
 
 ```text
-bench/solve.py       # calls the local server for every row (zero- or few-shot), saves predictions
-bench/evaluate.py    # accuracy + confusion matrix
-bench/compare.py     # summarizes accuracy across multiple report.json files
+bench/solve.py            # calls the local server for every row (zero- or few-shot), saves predictions
+bench/evaluate.py         # accuracy + confusion matrix
+bench/solve_logprob.py    # verbalizer log-prob scoring (argmax + Sigma k*P(k)) instead of free generation
+bench/evaluate_logprob.py # accuracy + confusion matrix + gold-label rank histogram / calibration
+bench/compare.py          # summarizes accuracy across multiple report.json files
 scripts/             # runtime/model download, server start/stop, run_bench.sh / run_all_bench.sh orchestration
 models/, runtime/    # gitignored — large downloads, not source
 outputs/             # gitignored — predictions*.jsonl, report*.json
