@@ -2,3 +2,13 @@ pandas
 pyarrow
 requests
 tqdm
+
+# non-LLM baselines (bench/solve_lexicon.py, bench/solve_encoder.py)
+numpy<2          # torch's numpy bridge needs <2; pins scikit-learn's scipy down too
+scikit-learn<1.5 # last line compatible with numpy<2
+torch            # on this machine's x86_64/Rosetta Homebrew Python, PyPI only ships up to 2.2.2
+                 # (no macOS x86_64 wheels beyond that) -- see README. On a native arm64
+                 # Python these pins can likely be relaxed.
+transformers<5   # 5.x requires torch>=2.4
+fugashi          # MeCab tokenizer wrapper for cl-tohoku/bert-base-japanese-v3
+unidic-lite      # dictionary backing the tokenizer above

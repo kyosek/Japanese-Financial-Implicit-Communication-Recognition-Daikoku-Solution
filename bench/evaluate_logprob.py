@@ -38,6 +38,16 @@ def main() -> None:
 
     confusion = Counter((r["gold"], r["prediction"]) for r in records)
 
+    f1_per_label = {}
+    for label in LABELS:
+        tp = confusion[(label, label)]
+        fp = sum(confusion[(g, label)] for g in LABELS if g != label)
+        fn = sum(confusion[(label, p)] for p in LABELS if p != label) + confusion[(label, None)]
+        precision = tp / (tp + fp) if (tp + fp) else 0.0
+        recall = tp / (tp + fn) if (tp + fn) else 0.0
+        f1_per_label[label] = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
+    macro_f1 = sum(f1_per_label.values()) / len(LABELS)
+
     rank_hist = {label: [0] * len(LABELS) for label in LABELS}
     prob_sum = defaultdict(float)
     prob_n = defaultdict(int)
@@ -54,6 +64,7 @@ def main() -> None:
     print(f"n examples      : {total}")
     print(f"correct (argmax): {correct}")
     print(f"accuracy        : {accuracy:.4f}")
+    print(f"macro F1        : {macro_f1:.4f}")
     print(f"failed to score : {unparsed}")
     print()
     print("confusion matrix (rows=gold, cols=argmax pred; '?' = failed to score)")
@@ -75,6 +86,8 @@ def main() -> None:
         "n": total,
         "correct": correct,
         "accuracy": accuracy,
+        "macro_f1": macro_f1,
+        "f1_per_label": f1_per_label,
         "unparsed": unparsed,
         "confusion": {f"{g}|{p}": c for (g, p), c in confusion.items()},
         "rank_histogram": rank_hist,

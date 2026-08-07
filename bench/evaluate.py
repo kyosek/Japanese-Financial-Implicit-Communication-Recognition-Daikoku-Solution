@@ -27,9 +27,23 @@ def main() -> None:
 
     confusion = Counter((r["gold"], r["prediction"]) for r in records)
 
+    # Per-label precision/recall/F1 from the confusion counts, then macro-averaged.
+    # Matters here because gold labels are heavily skewed (+1 is 55% of the set) --
+    # accuracy alone rewards a classifier that just leans on the majority class.
+    f1_per_label = {}
+    for label in LABELS:
+        tp = confusion[(label, label)]
+        fp = sum(confusion[(g, label)] for g in LABELS if g != label)
+        fn = sum(confusion[(label, p)] for p in LABELS if p != label) + confusion[(label, None)]
+        precision = tp / (tp + fp) if (tp + fp) else 0.0
+        recall = tp / (tp + fn) if (tp + fn) else 0.0
+        f1_per_label[label] = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
+    macro_f1 = sum(f1_per_label.values()) / len(LABELS)
+
     print(f"n examples      : {total}")
     print(f"correct         : {correct}")
     print(f"accuracy        : {accuracy:.4f}")
+    print(f"macro F1        : {macro_f1:.4f}")
     print(f"unparsed labels : {unparsed}")
     print()
     print("confusion matrix (rows=gold, cols=predicted; '?' = unparsed)")
@@ -44,6 +58,8 @@ def main() -> None:
         "n": total,
         "correct": correct,
         "accuracy": accuracy,
+        "macro_f1": macro_f1,
+        "f1_per_label": f1_per_label,
         "unparsed": unparsed,
         "confusion": {f"{g}|{p}": c for (g, p), c in confusion.items()},
     }
