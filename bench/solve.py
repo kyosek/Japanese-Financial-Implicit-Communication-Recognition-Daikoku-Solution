@@ -48,11 +48,11 @@ use these linguistic signals and examples to decide the label:
 
 "+2" (Strong Commitment): a clear, decisive statement indicating a firm commitment.
   Signals: 「〜します」「〜を実施します」「〜を達成します」 / 「〜を決定しています」「〜は確定しています」 / 「方針を変更する考えはありません」(when directly answering a decision or policy question)
-  Examples: 「来期は増配を実施します。」 / 「中長期でROE12%を達成します。」 / 「この施策により利益成長は実現できると確信しています。」
+  Examples: 「来期は増配を実施します。」 / 「中長期でROE12%を達成します。」 / 「この施策により利益成長は実現できると確信しています。」 / 「次期計画の具体的な検討に着手する方針です。」
 
 "+1" (Weak or Qualified Commitment): a positive or leaning commitment with qualifications, caution, or limited specificity -- directional intent rather than a finalized decision.
-  Signals: 「〜していきたい」「〜を目指しています」 / 「〜と考えています」「〜を見込んでいます」 / conditional or hypothetical expressions (e.g., 「〜であれば」「〜次第で」)
-  Examples: 「成長投資を進めていきたいと考えています。」 / 「今後も収益は拡大していくと見ています。」 / 「環境が整えば、検討を進める考えです。」
+  Signals: 「〜していきたい」「〜を目指しています」「〜している」 / 「〜と考えています」「〜を見込んでいます」 / conditional or hypothetical expressions (e.g., 「〜であれば」「〜次第で」)
+  Examples: 「成長投資を進めていきたいと考えています。」 / 「今後も収益は拡大していくと見ています。」 / 「環境が整えば、検討を進める考えです。」  / 「収益効果を得られるかを試算する。」
 
 "0" (Neutral or Hedged Intent): genuine ambiguity, or clarification/explanation/background without commitment or refusal toward any future action.
   Signals: 「〜断定できません」「明確な見通しは示せない」 / 「検討中」「状況を見極める必要がある」 / purely descriptive or explanatory statements providing facts or background
