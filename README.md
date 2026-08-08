@@ -219,6 +219,56 @@ qwen3/shisa/gpt-oss before trusting their numbers.
 `confusion` keys as `evaluate.py`'s report, so `bench/compare.py` can line
 up free-generation and log-prob-argmax accuracy side by side.
 
+### Prompt-sensitivity and label-order probes
+
+The results table below reports one accuracy number per model/setting from
+one fixed prompt. Without checking whether that number moves under harmless
+rewording or reordering of the *same* prompt, a delta between two rows in
+the table is unfalsifiable -- it could be a real model difference, or just
+noise in how the prompt happens to be written. `bench/prompt_sensitivity.py`
+runs two independent probes for this:
+
+- **`--probe rules`**: reruns the zero-shot free-generation eval under
+  `bench/rule_paraphrases.py`'s 5 paraphrases of the Appendix A.3 annotation
+  rules -- same linguistic-signal cue phrases and worked examples as
+  `solve.py`'s `ANNOTATION_RULES`, byte-identical across variants, only the
+  connective prose/structure differs -- each at `--seeds` different
+  llama.cpp sampler seeds (default `0,1,2`). The headline table runs at
+  temperature 0 (greedy), which is *by construction* seed-invariant, so this
+  probe samples at `--temperature > 0` (default 0.7) instead, giving a
+  seed-driven noise floor to compare paraphrase-driven deltas against.
+  Reports mean +/- sd accuracy/macro-F1 per paraphrase across seeds, plus
+  whether the cross-paraphrase spread exceeds the largest seed-noise
+  observed -- if it doesn't, the paraphrase deltas aren't distinguishable
+  from sampling noise.
+- **`--probe label-order`**: reruns the zero-shot **logprob** eval
+  (`solve_logprob.py`'s verbalizer scoring -- deterministic, no seed axis
+  needed) under `bench/label_orders.py`'s 5 orderings of how the labels are
+  *listed* in the fixed instruction block (the rules and the label->meaning
+  mapping are unchanged; only their listed position changes). Reports, per
+  ordering vs. the original order: accuracy/macro-F1, predicted-label
+  marginal frequency, mean row-wise total-variation distance between
+  softmax P(y|x) vectors, and the argmax flip rate.
+
+Both probes are zero-shot only (few-shot would add a third confound axis).
+
+```bash
+python bench/prompt_sensitivity.py --probe rules \
+    --model gemma4 --out-prefix outputs/sensitivity_gemma4
+
+python bench/prompt_sensitivity.py --probe label-order \
+    --model gemma4 --out-prefix outputs/sensitivity_gemma4
+```
+
+`scripts/run_sensitivity.sh` chains both probes for one model (start
+server, `--probe rules`, `--probe label-order`, stop server), the same
+unattended pattern as `run_bench.sh`:
+
+```bash
+nohup caffeinate -i ./scripts/run_sensitivity.sh gemma-4-12b-it-Q8_0.gguf gemma4 --reasoning off \
+  > outputs/run_gemma4_sensitivity.log 2>&1 &
+```
+
 ### Results (253 examples, temperature 0, with Appendix A.3 annotation rules)
 
 Cells are `accuracy / macro-F1`. Macro-F1 matters here because gold labels
@@ -285,11 +335,15 @@ bench/solve.py            # calls the local server for every row (zero- or few-s
 bench/evaluate.py         # accuracy + macro F1 + confusion matrix
 bench/solve_logprob.py    # verbalizer log-prob scoring (argmax + Sigma k*P(k)) instead of free generation
 bench/evaluate_logprob.py # accuracy + macro F1 + confusion matrix + gold-label rank histogram / calibration
+bench/calibrate_logprob.py # post-hoc prior correction (batch / SLD-EM) on solve_logprob.py's output
+bench/prompt_sensitivity.py # E4: rule-paraphrase x seed and label-order robustness probes
+bench/rule_paraphrases.py   # 5 semantically-equivalent paraphrases of the Appendix A.3 rules
+bench/label_orders.py       # label-listing-order permutations + the prompt-rewrite function
 bench/solve_majority.py   # non-LLM baseline: always predict the most common gold label
 bench/solve_lexicon.py    # non-LLM baseline: hedging/modality cue-lexicon counts + logistic regression, k-fold CV
 bench/solve_encoder.py    # non-LLM baseline: fine-tuned Japanese BERT-family encoder, k-fold CV
 bench/compare.py          # summarizes accuracy + macro F1 across multiple report.json files
-scripts/             # runtime/model download, server start/stop, run_bench.sh / run_all_bench.sh orchestration
+scripts/             # runtime/model download, server start/stop, run_bench.sh / run_all_bench.sh / run_sensitivity.sh orchestration
 models/, runtime/    # gitignored — large downloads, not source
 outputs/             # gitignored — predictions*.jsonl, report*.json
 ```

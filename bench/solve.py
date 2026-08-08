@@ -115,17 +115,18 @@ def build_prompt(target_query: str, exemplars: list[dict]) -> str:
     return "".join(parts)
 
 
-def call_model(endpoint: str, prompt: str, model: str, temperature: float, max_tokens: int) -> str:
-    resp = requests.post(
-        f"{endpoint}/v1/chat/completions",
-        json={
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": temperature,
-            "max_tokens": max_tokens,
-        },
-        timeout=120,
-    )
+def call_model(
+    endpoint: str, prompt: str, model: str, temperature: float, max_tokens: int, seed: int | None = None
+) -> str:
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+    }
+    if seed is not None:
+        payload["seed"] = seed
+    resp = requests.post(f"{endpoint}/v1/chat/completions", json=payload, timeout=120)
     resp.raise_for_status()
     return resp.json()["choices"][0]["message"]["content"]
 
