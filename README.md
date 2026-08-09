@@ -47,6 +47,18 @@ The fix depends on the model:
   tokens with the flag set). The actual fix is a generous `--max-tokens`
   (used 2048) so generation doesn't get cut off before reaching the final
   channel.
+- **DeepSeek-R1-Distill-Qwen-32B**: unlike the hybrid models above, R1-distill
+  has no non-thinking mode at all — there's no flag to suppress the `<think>`
+  block, only `--max-tokens` to make sure generation survives it (used 2048;
+  llama.cpp auto-splits `<think>...</think>` into `reasoning_content`, so
+  `content` cleanly holds just the final label once generation gets there).
+  Because it's a **dense** 32B model rather than the ~3B-active MoE models
+  above, per-token generation is much slower on this hardware: the zero-shot
+  run took ~2h53m for 253 rows (vs. well under an hour for the MoE models),
+  and 7/253 requests hit `solve.py`'s 120s HTTP timeout and came back
+  unparsed — 6 of those 7 were the *last* 6 rows of the run, consistent with
+  the Mac slowing down (thermal throttling) over a long sustained-Metal-load
+  run rather than those particular prompts being unusually hard.
 
 If a model shows a high unparsed rate, check which failure mode it is
 (`reasoning_content` populated but `content` empty = ran out of budget) before
@@ -65,6 +77,7 @@ assuming the flag will fix it.
   | [Qwen3.6-35B-A3B](https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF) (UD-Q4_K_M) | ~22GB | MoE, ~3B active params — successor to Qwen3-30B-A3B-Instruct-2507 |
   | [gpt-oss-20b](https://huggingface.co/openai/gpt-oss-20b) (F16/native MXFP4) | ~14GB | OpenAI open-weight reasoning model (harmony format) |
   | [gemma-4-12b-it](https://huggingface.co/unsloth/gemma-4-12b-it-GGUF) (Q8_0) | ~13GB | Dense 12B, hybrid local/global attention, reasoning by default |
+  | [DeepSeek-R1-Distill-Qwen-32B](https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-32B-GGUF) (Q4_K_M) | ~20GB | Dense 32B, R1 reasoning distilled onto Qwen2.5-32B — always reasons, no non-thinking mode |
 
 > Kimi-K2/K3 (mentioned in early planning) are 1T–2.8T parameter MoE models
 > whose smallest GGUF quants are 350GB–600GB+ — not feasible on a 48GB Mac.
@@ -128,6 +141,7 @@ python3.12 -m venv .venv
 ./scripts/download_model.sh unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf
 ./scripts/download_model.sh unsloth/Qwen3.6-35B-A3B-GGUF Qwen3.6-35B-A3B-UD-Q4_K_M.gguf
 ./scripts/download_model.sh unsloth/gpt-oss-20b-GGUF gpt-oss-20b-F16.gguf
+./scripts/download_model.sh unsloth/DeepSeek-R1-Distill-Qwen-32B-GGUF DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf
 ```
 
 `requirements.txt` pins `numpy<2`, `scikit-learn<1.5`, and `transformers<5`
@@ -288,8 +302,10 @@ alone does.
 | gpt-oss-20b | 0.6008 / 0.3521 | 0.5000 / 0.3214 |
 | qwen3-30b-a3b | 0.6047 / 0.3353 | 0.5605 / 0.2624 |
 | shisa-v2-qwen2.5-32b | 0.5336 / 0.2917 | 0.5161 / 0.2912 |
+| deepseek-r1-distill-qwen-32b | 0.4862 / 0.3026 | *(not run)* |
 
-All 10 runs: 0 unparsed labels.
+All 10 original runs: 0 unparsed labels. deepseek-r1-distill-qwen-32b zero-shot: 7/253 unparsed
+(see reasoning-model note below) — few-shot wasn't run for this model.
 
 **Non-LLM baselines** (5-fold CV, out-of-fold predictions; see above):
 
