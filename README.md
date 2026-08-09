@@ -38,6 +38,9 @@ The fix depends on the model:
 
 - **gemma-4-12b-it**: `--reasoning off` (passed through `scripts/serve.sh`)
   actually suppresses the extended thinking — cheap and reliable.
+- **Qwen3.6-35B-A3B**: same fix as gemma-4-12b-it. Without `--reasoning off`
+  every response burned the default `--max-tokens 32` on an unfinished
+  thinking preamble (0/253 parsed); with the flag set, zero unparsed labels.
 - **gpt-oss-20b**: `--reasoning off` only changes how llama.cpp *labels*
   `content` vs `reasoning_content` in the response; the harmony format's
   analysis channel is generated either way (confirmed: still ~450+ reasoning
@@ -59,6 +62,7 @@ assuming the flag will fix it.
   |---|---|---|
   | [shisa-v2-qwen2.5-32b](https://huggingface.co/shisa-ai/shisa-v2-qwen2.5-32b) (Q4_K_M) | ~20GB | Japanese-specialized fine-tune of Qwen2.5-32B (Shisa.AI) |
   | [Qwen3-30B-A3B-Instruct-2507](https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507) (Q4_K_M) | ~19GB | MoE, ~3B active params — multilingual generalist, fast |
+  | [Qwen3.6-35B-A3B](https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF) (UD-Q4_K_M) | ~22GB | MoE, ~3B active params — successor to Qwen3-30B-A3B-Instruct-2507 |
   | [gpt-oss-20b](https://huggingface.co/openai/gpt-oss-20b) (F16/native MXFP4) | ~14GB | OpenAI open-weight reasoning model (harmony format) |
   | [gemma-4-12b-it](https://huggingface.co/unsloth/gemma-4-12b-it-GGUF) (Q8_0) | ~13GB | Dense 12B, hybrid local/global attention, reasoning by default |
 
@@ -122,6 +126,7 @@ python3.12 -m venv .venv
 # fetch whichever models you want to compare
 ./scripts/download_model.sh mradermacher/shisa-v2-qwen2.5-32b-GGUF shisa-v2-qwen2.5-32b.Q4_K_M.gguf
 ./scripts/download_model.sh unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf
+./scripts/download_model.sh unsloth/Qwen3.6-35B-A3B-GGUF Qwen3.6-35B-A3B-UD-Q4_K_M.gguf
 ./scripts/download_model.sh unsloth/gpt-oss-20b-GGUF gpt-oss-20b-F16.gguf
 ```
 
@@ -278,12 +283,13 @@ alone does.
 
 | model | zero-shot | few-shot (k=1, 5 shots) |
 |---|---|---|
-| gemma-4-12b-it | **0.6443 / 0.3628** | 0.6331 / 0.3517 |
+| qwen3.6-35b-a3b | **0.6838 / 0.4072** | 0.6331 / 0.3339 |
+| gemma-4-12b-it | 0.6443 / 0.3628 | 0.6331 / 0.3517 |
 | gpt-oss-20b | 0.6008 / 0.3521 | 0.5000 / 0.3214 |
 | qwen3-30b-a3b | 0.6047 / 0.3353 | 0.5605 / 0.2624 |
 | shisa-v2-qwen2.5-32b | 0.5336 / 0.2917 | 0.5161 / 0.2912 |
 
-All 8 runs: 0 unparsed labels.
+All 10 runs: 0 unparsed labels.
 
 **Non-LLM baselines** (5-fold CV, out-of-fold predictions; see above):
 
