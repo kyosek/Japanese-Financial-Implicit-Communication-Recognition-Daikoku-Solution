@@ -184,7 +184,7 @@ def main() -> None:
 
             record = {
                 "id": int(row.id),
-                "gold": row.answer,
+                "gold": getattr(row, "answer", None),
                 "raw_response": raw,
                 "prediction": label,
                 "elapsed_s": round(elapsed, 2),
