@@ -1,0 +1,252 @@
+[
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 物流センターの建設を来年開始しますか。\nCompany Response: 自治体の許認可が計画どおり得られれば、来年下期の着工を想定しています。審査状況によっては開始時期が後ろ倒しになる可能性があります。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":253
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 2030年度の温室効果ガス削減目標を正式な経営目標にしますか。\nCompany Response: はい。2019年度比50％削減を2030年度の正式目標として取締役会で承認しました。各事業部の投資計画と役員報酬指標にも反映します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":254
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 今後、個人向け暗号資産取引へ参入しますか。\nCompany Response: 当社は個人向け暗号資産取引には参入しません。事業リスクが当社方針に合わないため、将来の事業候補からも除外しています。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":255
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 大型投資の資金確保のため自己株式取得を停止しますか。\nCompany Response: 自己株式取得を停止する予定はありません。すでに公表した取得枠は変更せず、期限まで計画どおり継続します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":256
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 原材料高を受けて製品価格を引き上げますか。\nCompany Response: コスト上昇が継続する場合には、一部製品の価格改定をお願いする可能性があります。顧客との協議を踏まえて品目ごとに判断します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":257
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 主力工場で大規模な人員削減を行う予定ですか。\nCompany Response: 主力工場で人員削減を行う計画はありません。生産体制を維持する方針を正式決定しており、閉鎖や縮小も検討していません。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":258
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 不採算工場を直ちに閉鎖すべきではありませんか。\nCompany Response: 雇用や供給責任を考えると、直ちに閉鎖するのは難しい状況です。改善計画の進捗を半年間確認したうえで、必要なら再編を検討します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":259
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 自己株式取得を実施する予定はありますか。\nCompany Response: 本日の取締役会で、取得総額上限120億円、取得株数上限800万株の自己株式取得を決議しました。明日から12月末までの期間に市場買付けを実施します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":260
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 今期中に主力サービスを値上げしますか。\nCompany Response: 今期中の値上げは行いません。料金を据え置くことを決定しており、顧客にも通知済みです。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":261
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 販売数量を伸ばすため大幅な値下げを行いますか。\nCompany Response: 現時点で一律の大幅値下げは考えていません。ただし、地域や在庫状況に応じた限定的な販促は柔軟に実施します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":262
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 赤字が続く製品ラインを来期も継続しますか。\nCompany Response: いいえ。当該製品は今期末で販売と生産を完全に終了します。後継製品を投入する予定もありません。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":263
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 為替変動によって通期利益は上振れすると見ていますか。\nCompany Response: 円安による増益効果がある一方、輸入原材料コストは増加します。両者の影響を精査しており、現時点では通期予想を据え置いています。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":264
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 不採算店舗の整理を今期中に完了させる考えですか。\nCompany Response: 今期末までに不採算店舗20店を閉鎖する計画を確定しています。対象店舗にはすでに通知しており、閉鎖費用も今期計画に織り込みました。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":265
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 来期に国内工場の生産能力を増やす必要がありますか。\nCompany Response: 現在の設備能力は年間120万台で、足元の稼働率は約78％です。需要予測について複数の前提を置いて検証しています。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":266
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 今年中に欧州市場へ参入しますか。\nCompany Response: 今年中の参入は見送る方向です。規制対応と販売網の整備が進めば、来年度以降に改めて可能性を検討します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":267
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 成長加速のため大型買収を実施しますか。\nCompany Response: 大型案件も排除しておらず、条件に合う企業があれば前向きに検討します。一方で、現時点で交渉中の具体的な案件はありません。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":268
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 生成AIの実証後に全社導入へ移るのでしょうか。\nCompany Response: 実証では処理時間、回答精度、情報漏えいリスクを測定しています。評価結果の取りまとめは第4四半期を予定しています。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":269
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 現在示している売上試算を正式な経営目標と理解してよいですか。\nCompany Response: 説明資料の数値は市場規模から機械的に算出した参考値です。正式な中期計画については次回の計画発表時に説明します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":270
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 海外子会社の買収を今期中に完了する見込みですか。\nCompany Response: 先方と最終契約を締結しました。競争当局の承認取得後、遅くとも今期末までに株式取得を完了します。必要資金も確保済みです。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":271
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 株価水準を踏まえて自己株式取得を行いますか。\nCompany Response: 自己株式取得は有力な選択肢の一つです。今後の株価と資金需要を見ながら、機動的に実施できるよう検討を進めます。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":272
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 来期配当額は今期以上になると考えてよいですか。\nCompany Response: 配当は連結業績と投資需要を踏まえて決定する方針です。来期の具体額は、業績予想と合わせて本決算時に公表します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":273
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 保有不動産を売却して特別利益を計上しますか。\nCompany Response: 対象不動産については継続保有と売却の双方から価値を検証しています。鑑定評価や事業上の必要性を確認している段階です。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":274
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 来年度に中途採用を200人まで増やしますか。\nCompany Response: 事業計画が想定どおり進めば200人規模を目指しますが、人材の質を優先するため、人数自体を必達目標にはしていません。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":275
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 暗号資産による決済を近く導入しますか。\nCompany Response: 顧客要望が限定的であるため、当面の優先順位は低いと考えています。制度や需要が変化すれば、導入可能性を再評価します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-1",
+    "id":276
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 競合企業の買収を検討していますか。\nCompany Response: その企業を買収する意思はありません。先方への提案も協議も行っておらず、今後交渉を開始する予定もありません。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":277
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 顧客の取引データを広告事業に利用しますか。\nCompany Response: 顧客の取引データを広告目的で利用することはありません。本人同意の有無にかかわらず、この用途には提供しないという社内規程です。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":278
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 生成AIを全社業務へ導入する方針ですか。\nCompany Response: まず三つの部門で実証を行い、生産性と情報管理上の課題を確認したうえで、来年度からの全社展開を目指します。結果次第では範囲を見直します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":279
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 収益改善のため大規模な人員削減を実施しますか。\nCompany Response: 現段階で大規模な削減に踏み切る考えはありません。まず配置転換と自然減で効率化を進め、環境が悪化した場合に対応を見直します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-1",
+    "id":280
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 来期は配当性向を40％まで引き上げる考えですか。\nCompany Response: 安定したフリーキャッシュフローを確認できれば、40％程度への引き上げを目指したいと考えています。ただし、投資案件や市況によって最終判断は変わります。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":281
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 2030年より前にカーボンニュートラルを達成できますか。\nCompany Response: 現在の技術と調達環境では2030年より前の達成は難しいと見ています。ただし、新技術の実用化が進めば目標時期の前倒しを検討します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-1",
+    "id":282
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 国内全拠点への新基幹システム導入を実行しますか。\nCompany Response: 2027年4月1日に国内全42拠点で新システムへ一斉移行します。移行日と予算は確定しており、旧システムは同年6月末に停止します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":283
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 東南アジアで生産能力を増強する予定ですか。\nCompany Response: 需要の伸びが今後も続くことを確認できれば、現地工場の増設に踏み切りたいと考えています。まず次の四半期まで受注動向を見極めます。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":284
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 今四半期に自己株式取得を発表する可能性はありますか。\nCompany Response: 今のところ具体的な実施予定はありません。今後の株価や資本余力によっては、選択肢として再検討します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-1",
+    "id":285
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 海外子会社を現地市場へ上場させる考えですか。\nCompany Response: 上場は成長資金を確保する選択肢として検討しています。市場環境と子会社の収益基盤が整えば、具体的な準備に入りたいと考えています。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":286
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 国内新工場への投資を予定どおり進めますか。\nCompany Response: 新工場建設について正式に投資決定しました。2027年10月に着工し、2029年4月の量産開始に向けて総額350億円を投じます。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":287
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 中期的にROE10％を達成すると約束できますか。\nCompany Response: ROE10％は目指すべき水準として掲げています。市場環境に左右される部分もあるため確約はできませんが、収益改善と資本効率向上を進めます。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+1",
+    "id":288
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 買収候補企業との交渉に入っているのでしょうか。\nCompany Response: 個別案件については回答を控えます。当社は収益性、技術、人材との相乗効果という基準で案件を継続的に評価しています。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":289
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 資産売却で得た資金を有利子負債の返済に充てますか。\nCompany Response: 今回の資産売却代金180億円は、全額を3月末までの借入金返済に充当します。この資金使途は取締役会で決議済みです。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":290
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 今期は創立記念配当を実施しますか。\nCompany Response: 創立記念配当は実施しません。取締役会で見送ることを決定しており、今期の配当予想に追加する考えはありません。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":291
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 延期中の海外工場建設を再開しますか。\nCompany Response: 海外工場計画は正式に中止しました。用地契約も解除済みであり、同地域で建設計画を再開する予定はありません。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":292
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 新しい法人向け決済サービスを年度内に開始しますか。\nCompany Response: サービス開始日は2027年2月1日に決定しています。必要な認可とシステム試験を完了しており、全国の法人顧客向けに同日から提供します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":293
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 次期中期計画でもROEを最重要指標にしますか。\nCompany Response: 現行計画ではROE、営業キャッシュフロー、顧客継続率を主要指標としています。次期計画の指標体系は策定過程にあります。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":294
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 四半期ごとの詳細な利益ガイダンスを開示できますか。\nCompany Response: 短期変動が大きいため、現時点では四半期別ガイダンスの開示は考えていません。予測精度が高まれば開示方法を再検討します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-1",
+    "id":295
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 子会社の上場準備をすぐに開始しますか。\nCompany Response: 現在の収益規模では準備開始は時期尚早と考えています。数年後に事業基盤が整った段階で、資金調達手段の一つとして検討します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-1",
+    "id":296
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 物流子会社を株式市場に上場させますか。\nCompany Response: 物流子会社を上場させる考えはありません。完全子会社として運営を続けることを取締役会で確認しています。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-2",
+    "id":297
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 足元の好業績を踏まえ、今期中に追加増配できますか。\nCompany Response: 今期中の追加増配は現時点では難しいと考えています。ただし、年度末のキャッシュフローが想定を上回れば、改めて検討する余地はあります。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-1",
+    "id":298
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 今期の年間配当を前期より増額する方針でしょうか。\nCompany Response: はい。取締役会で、今期の年間配当を1株当たり60円とし、前期の45円から15円増配する方針を決議しました。業績が計画どおりである限り、この水準を実施します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":299
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 余剰資金は投資より株主還元を優先する方針ですか。\nCompany Response: 成長投資、財務健全性、株主還元の三つを総合的に勘案するという従来の資本政策に変更はありません。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"0",
+    "id":300
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 来年度、社員の賃金を引き上げますか。\nCompany Response: 来年4月から国内社員の基本給を平均5％引き上げることを決定しました。対象者と実施時期も確定しており、労使協議を経て予定どおり実行します。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"+2",
+    "id":301
+  },
+  {
+    "query":"You are a Japanese financial expert fluent in Japanese business communication.\nGiven a financial question and the corresponding company response (both in Japanese),\nyour task is to determine the company’s underlying intent level and output exactly one label from the following set: {\"+2\", \"+1\", \"0\", \"-1\", \"-2\"}, \nThe label meanings are provided for explanation only (DO NOT output these texts):\n    \"+2\" : \"Strong Commitment\"\n    \"+1\" : \"Weak or Qualified Commitment\"\n     \"0\" : \"Neutral or Hedged Intent\"\n    \"-1\" : \"Weak Refusal\"\n    \"-2\" : \"Strong Refusal\"\n\nFinancial Question: 来期も追加の値上げを実施するのでしょうか。\nCompany Response: 原材料価格と為替には上昇、下落の双方のシナリオがあります。現在は各シナリオが採算に与える影響を分析している段階です。\n\nDirectly output the chosen label, and do not provide any explanation.\nAnswer:\n",
+    "answer":"-1",
+    "id":302
+  }
+]
