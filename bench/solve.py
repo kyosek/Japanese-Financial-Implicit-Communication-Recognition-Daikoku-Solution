@@ -48,19 +48,21 @@ use these linguistic signals and examples to decide the label:
 
 "+2" (Strong Commitment): a clear, decisive statement indicating a firm commitment.
   Signals: 「〜します」「〜を実施します」「〜を達成します」 / 「〜を決定しています」「〜は確定しています」 / 「方針を変更する考えはありません」(when directly answering a decision or policy question)
-  Examples: 「来期は増配を実施します。」 / 「中長期でROE12%を達成します。」 / 「この施策により利益成長は実現できると確信しています。」 / 「次期計画の具体的な検討に着手する方針です。」
+  Tie-break: if a concrete, unhedged figure/date/decision directly answers the question asked, classify +2 by that core claim even when surrounding sentences hedge on secondary or unrelated details -- don't downgrade to +1 just because part of the answer is still undecided.
+  Examples: 「来期は増配を実施します。」 / 「中長期でROE12%を達成します。」 / 「この施策により利益成長は実現できると確信しています。」 / 「次期計画の具体的な検討に着手する方針です。」 / 「グローバルプラットフォームの数を32年度までに13から9に削減し、最終的には7つ(46%減)にします。」
 
 "+1" (Weak or Qualified Commitment): a positive or leaning commitment with qualifications, caution, or limited specificity -- directional intent rather than a finalized decision.
   Signals: 「〜していきたい」「〜を目指しています」「〜している」 / 「〜と考えています」「〜を見込んでいます」 / conditional or hypothetical expressions (e.g., 「〜であれば」「〜次第で」)
+  Caution: requires a first-person forward-intent verb about the company's *own* future action, answering the question asked. General optimism about market conditions, competitors, or the company's own past/current performance, with no such verb, is 0 -- not +1.
   Examples: 「成長投資を進めていきたいと考えています。」 / 「今後も収益は拡大していくと見ています。」 / 「環境が整えば、検討を進める考えです。」  / 「収益効果を得られるかを試算する。」
 
 "0" (Neutral or Hedged Intent): genuine ambiguity, or clarification/explanation/background without commitment or refusal toward any future action.
-  Signals: 「〜断定できません」「明確な見通しは示せない」 / 「検討中」「状況を見極める必要がある」 / purely descriptive or explanatory statements providing facts or background
-  Examples: 「現時点では明確な見通しは示せません。」 / 「様々な見方があり、コメントは差し控えます。」 / 「過去にはこのような取り組みを行ってきました。」(background explanation only)
+  Signals: 「〜断定できません」「明確な見通しは示せない」 / 「検討中」「状況を見極める必要がある」 / purely descriptive or explanatory statements providing facts or background / declining to comment on something outside the company's own future decision (e.g. a third party's unpublished results)
+  Examples: 「現時点では明確な見通しは示せません。」 / 「様々な見方があり、コメントは差し控えます。」 / 「過去にはこのような取り組みを行ってきました。」(background explanation only) / 「同社はまだ決算公表を行っていないため、回答は差し控えさせて頂く。」(a third party's undisclosed results, not the company's own decision)
 
 "-1" (Weak Refusal): a negative stance that is qualified, conditional, or time-bound, leaving room for future reconsideration.
-  Signals: 「現時点では〜しない」「直ちには考えていない」 / 「今後検討の余地はあるが」 / refusals framed as temporary, conditional, or dependent on future circumstances
-  Examples: 「現時点では配当方針を変更する考えはありません。」 / 「今中計期間中に見直すことは想定していません。」 / 「足元では難しいと考えていますが、今後は検討します。」
+  Signals: 「現時点では〜しない」「直ちには考えていない」 / 「今後検討の余地はあるが」 / 「意思決定はまだなされておりません」「まだ決断はしていません」「具体的な水準は申し上げないほうがよい」(declining to commit on specifics of the company's *own* pending decision -- distinct from 0's decline on something outside the company's control) / refusals framed as temporary, conditional, or dependent on future circumstances
+  Examples: 「現時点では配当方針を変更する考えはありません。」 / 「今中計期間中に見直すことは想定していません。」 / 「足元では難しいと考えていますが、今後は検討します。」 / 「NASDAQもニューヨークもロンドンも検討していますが、まだ決断はしていません。」
 
 "-2" (Strong Refusal): a clear and definitive rejection, leaving no visible room for reconsideration.
   Signals: 「〜する予定はありません」 / 「〜は行いません」「〜を否定します」
