@@ -46,6 +46,12 @@ REMINDER_MARKER = "Directly output the chosen label"
 ANNOTATION_RULES = """Detailed classification rules (from the annotation guideline), \
 use these linguistic signals and examples to decide the label:
 
+General principle: classify by the core claim that directly answers the question asked.
+Responses often open with a hedge, a negation about a secondary or unrelated detail, or a
+description of the current/past state before reaching the operative claim (often near the
+end). Classify by that operative claim, not by an earlier phrase that superficially
+resembles a refusal or commitment cue -- read the whole response before deciding.
+
 "+2" (Strong Commitment): a clear, decisive statement indicating a firm commitment.
   Signals: 「〜します」「〜を実施します」「〜を達成します」 / 「〜を決定しています」「〜は確定しています」 / 「方針を変更する考えはありません」(when directly answering a decision or policy question)
   Tie-break: if a concrete, unhedged figure/date/decision directly answers the question asked, classify +2 by that core claim even when surrounding sentences hedge on secondary or unrelated details -- don't downgrade to +1 just because part of the answer is still undecided.
@@ -53,16 +59,17 @@ use these linguistic signals and examples to decide the label:
 
 "+1" (Weak or Qualified Commitment): a positive or leaning commitment with qualifications, caution, or limited specificity -- directional intent rather than a finalized decision.
   Signals: 「〜していきたい」「〜を目指しています」「〜している」 / 「〜と考えています」「〜を見込んでいます」 / conditional or hypothetical expressions (e.g., 「〜であれば」「〜次第で」)
-  Caution: requires a first-person forward-intent verb about the company's *own* future action, answering the question asked. General optimism about market conditions, competitors, or the company's own past/current performance, with no such verb, is 0 -- not +1.
+  Caution: requires a first-person forward-intent verb about the company's *own* future action, answering the question asked. General optimism about market conditions, competitors, or the company's own past/current performance, with no such verb, is 0 -- not +1. An answer that opens with a hedge or negation but closes with this kind of forward-intent claim answering the question is +1, not -1 or 0 -- classify by the closing claim.
   Examples: 「成長投資を進めていきたいと考えています。」 / 「今後も収益は拡大していくと見ています。」 / 「環境が整えば、検討を進める考えです。」  / 「収益効果を得られるかを試算する。」
 
 "0" (Neutral or Hedged Intent): genuine ambiguity, or clarification/explanation/background without commitment or refusal toward any future action.
-  Signals: 「〜断定できません」「明確な見通しは示せない」 / 「検討中」「状況を見極める必要がある」 / purely descriptive or explanatory statements providing facts or background / declining to comment on something outside the company's own future decision (e.g. a third party's unpublished results)
-  Examples: 「現時点では明確な見通しは示せません。」 / 「様々な見方があり、コメントは差し控えます。」 / 「過去にはこのような取り組みを行ってきました。」(background explanation only) / 「同社はまだ決算公表を行っていないため、回答は差し控えさせて頂く。」(a third party's undisclosed results, not the company's own decision)
+  Signals: 「〜断定できません」「明確な見通しは示せない」 / 「検討中」「状況を見極める必要がある」 / purely descriptive or explanatory statements providing facts or background / declining to comment on something outside the company's own future decision (e.g. a third party's unpublished results) / a negation that answers a factual or current-state question rather than declining a future ask (e.g. "did your approach change?" -> "not particularly") / describing an initiative as still at an early research or study stage, not yet at the point of a decision to act
+  Examples: 「現時点では明確な見通しは示せません。」 / 「様々な見方があり、コメントは差し控えます。」 / 「過去にはこのような取り組みを行ってきました。」(background explanation only) / 「同社はまだ決算公表を行っていないため、回答は差し控えさせて頂く。」(a third party's undisclosed results, not the company's own decision) / 「特に対応を変えたということではありません。」(a factual "no" about what happened, not a refusal of a future request)
 
 "-1" (Weak Refusal): a negative stance that is qualified, conditional, or time-bound, leaving room for future reconsideration.
-  Signals: 「現時点では〜しない」「直ちには考えていない」 / 「今後検討の余地はあるが」 / 「意思決定はまだなされておりません」「まだ決断はしていません」「具体的な水準は申し上げないほうがよい」(declining to commit on specifics of the company's *own* pending decision -- distinct from 0's decline on something outside the company's control) / refusals framed as temporary, conditional, or dependent on future circumstances
-  Examples: 「現時点では配当方針を変更する考えはありません。」 / 「今中計期間中に見直すことは想定していません。」 / 「足元では難しいと考えていますが、今後は検討します。」 / 「NASDAQもニューヨークもロンドンも検討していますが、まだ決断はしていません。」
+  Signals: 「現時点では〜しない」「直ちには考えていない」 / 「今後検討の余地はあるが」 / 「意思決定はまだなされておりません」「まだ結論は出していません」「具体的な数値の開示は控えたい」(declining to commit on specifics of the company's *own* pending decision -- distinct from 0's decline on something outside the company's control) / refusals framed as temporary, conditional, or dependent on future circumstances
+  Caution: the negation must itself be the operative claim answering a forward-looking question about the company's own pending decision. A hedge on a secondary/tangential detail, or a negation of a present/past fact, is not -1 by itself if the claim that actually answers the question is elsewhere in the response (see general principle above) -- and if that other claim is a forward-intent statement, prefer +1 (see +1's caution) or +2 (see +2's tie-break) over -1.
+  Examples: 「現時点では配当方針を変更する考えはありません。」 / 「今中計期間中に見直すことは想定していません。」 / 「足元では難しいと考えていますが、今後は検討します。」 / 「複数の候補地を並行して検討していますが、まだ結論は出していません。」
 
 "-2" (Strong Refusal): a clear and definitive rejection, leaving no visible room for reconsideration.
   Signals: 「〜する予定はありません」 / 「〜は行いません」「〜を否定します」

@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# Zero-shot-only solve over the unlabeled JF-ICR_test_participant.parquet set
-# (no `answer` column, so there's nothing for evaluate.py to score -- this
-# just produces predictions for submission). Otherwise mirrors run_bench.sh:
-# stops any running server, starts the requested model, waits for health,
-# solves, stops the server.
+# Zero-shot solve + evaluate over JF-ICR_test_participant_labelled.parquet
+# (manually annotated, so predictions can be scored against gold). Otherwise
+# mirrors run_bench.sh: stops any running server, starts the requested model,
+# waits for health, solves, evaluates, stops the server.
 #
 # Usage:
 #   scripts/run_participant_bench.sh <model-filename-in-models-dir> <alias> [extra llama-server args...]
@@ -40,10 +39,13 @@ for i in $(seq 1 180); do
   sleep 5
 done
 
-echo "[run_participant_bench $ALIAS] zero-shot solve on test_participant set"
+echo "[run_participant_bench $ALIAS] zero-shot solve on test_participant_labelled set"
 "$PY" "$ROOT/bench/solve.py" --model "$ALIAS" \
-  --data "$ROOT/JF-ICR_test_participant.parquet" \
+  --data "$ROOT/JF-ICR_test_participant_labelled.parquet" \
   --out "$OUT/predictions_${ALIAS}_test_participant_zeroshot.jsonl"
+"$PY" "$ROOT/bench/evaluate.py" \
+  --predictions "$OUT/predictions_${ALIAS}_test_participant_zeroshot.jsonl" \
+  --report "$OUT/report_${ALIAS}_test_participant_zeroshot.json"
 
 echo "[run_participant_bench $ALIAS] stopping server"
 "$ROOT/scripts/stop_server.sh" || true
