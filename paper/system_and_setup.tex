@@ -1,0 +1,304 @@
+% ============================================================
+\section{Submitted System}
+\label{sec:system}
+% ============================================================
+
+% Kept short by design. This section describes what we submitted and
+% nothing else; everything exploratory lives in Section 6.
+
+Our submission is a three-member majority-vote ensemble over a single
+shared prompt. All three members solve the task in the same way --- one
+zero-shot call per instance, greedy decoding, a single label token
+parsed out of the reply --- and differ only in the underlying model:
+one proprietary API model (Claude Opus) and two open-weight models run
+locally under \texttt{llama.cpp} (Qwen3.6-35B-A3B and gemma-4-12b-it).
+Table~\ref{tab:ensemble} lists the members. Nothing in the system is
+trained, fitted, or tuned on labelled data: the only supervision the
+system sees is the task's own label definitions and the published
+annotation guidelines, which are inserted into the prompt as text.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llr}
+\toprule
+Member & Serving & Open split \\
+\midrule
+Claude Opus \checkme{exact model id} & API & 0.6640 \\
+Qwen3.6-35B-A3B (UD-Q4\_K\_M) & local & 0.6838 \\
+gemma-4-12b-it (Q8\_0)        & local & 0.6443 \\
+\midrule
+Majority vote (submitted)     & ---   & 0.6957 \\
+\bottomrule
+\end{tabular}
+\caption{Ensemble members and their zero-shot accuracy on the open
+split ($n{=}253$). Every member uses the identical prompt of
+\S\ref{sec:prompt} and the decoding settings of \S\ref{sec:decoding}.}
+\label{tab:ensemble}
+\end{table}
+
+\subsection{Ensemble and Tie-Breaking}
+\label{sec:ensemble}
+
+The three members vote on the five-way label directly; we do not
+average scores or probabilities, since one member is served through an
+API that does not expose them. With three voters and five classes, a
+majority exists whenever any two members agree, and the remaining case
+--- three distinct labels --- is resolved in favour of the member with
+the highest open-split accuracy (Qwen3.6-35B-A3B). On the open split
+this tie-break fires on \checkme{8}/253 instances, and the choice of
+tie-breaking member moves accuracy by at most \checkme{1.6}\,pp
+(0.6798 with Claude Opus as tie-breaker, 0.6957 with either of the
+other two), so the rule is not load-bearing.
+
+We report the ensemble because it is the most accurate configuration we
+observed on the open split, but we are explicit about how small the
+effect is and how it is obtained. The three members are unanimous on
+171/253 open-split instances (67.6\%), and pairwise agreement ranges
+from 0.731 (Claude Opus vs.\ Qwen3.6) to 0.795. Voting buys
+$+1.2$\,pp of accuracy over the best single member and \emph{costs}
+macro-F$_1$ relative to Claude Opus alone (0.395 vs.\ 0.474): the vote
+resolves disagreements towards the majority classes, which is precisely
+what accuracy rewards and macro-F$_1$ does not. Section~\ref{sec:probe}
+returns to this trade-off.
+\needrun{Ensemble numbers here were computed offline by majority vote
+over the saved per-model prediction files; the voting script is not yet
+committed under \texttt{bench/}. Regenerate them from a committed
+\texttt{bench/ensemble.py} before submission so the number in the table
+and the number in the repository provably match.}
+
+\subsection{Prompt Construction}
+\label{sec:prompt}
+
+Each instance in the released data arrives as a fully formed prompt:
+role framing, the five label definitions, the Japanese question and
+company response, and an instruction to emit the label and nothing
+else. We use that prompt unmodified as the carrier and make exactly one
+addition: the annotation guidelines are spliced in immediately before
+the question--response block, so that the model sees the same
+per-label linguistic signals and worked examples --- sentence-final
+forms, modality and benefactive markers, conditional expressions ---
+that the human annotators were given. The full prompt is reproduced in
+Appendix~\ref{app:prompts}. This is a straightforward reading of the
+task documentation and we expect it to be common across participating
+systems; \S\ref{sec:ablation} quantifies what it contributes and how
+that number should be read.
+
+Two aspects of this are worth stating plainly rather than leaving to be
+discovered. First, the guidelines are reproduced close to verbatim but
+not entirely so: after inspecting errors on the open split we added one
+example to the \texttt{+2} block and one signal and one example to the
+\texttt{+1} block \checkme{confirm this is the complete list against
+the diff of commit \texttt{d517b77}}. These additions are small, and
+they were derived from open-split errors only --- no test instance
+influenced them --- but the prompt is therefore partly tuned rather
+than purely given, and the ablation in \S\ref{sec:ablation} measures
+the tuned version. Second, the prompt is English-language instructions
+around Japanese content, exactly as released; we did not translate the
+instructions into Japanese, and we did not test whether doing so would
+help.
+
+We submit a zero-shot system. Few-shot prompting with one exemplar per
+label was evaluated on the open split and was worse than zero-shot for
+every model we tried once the guidelines were present
+(\S\ref{sec:fewshot}), so it does not appear in the submission.
+
+\subsection{Decoding}
+\label{sec:decoding}
+
+All members decode greedily (temperature $0$) with a generation budget
+of 32 tokens, which is ample for a system asked to emit one of five
+short strings. The two local models are served by \texttt{llama.cpp}
+with an 8192-token context, all layers offloaded to the GPU, and
+extended thinking disabled (\texttt{-{}-reasoning off}); without that
+flag both models spend the entire budget on an unfinished reasoning
+preamble and emit no label at all. Models that cannot be put into a
+non-thinking mode were excluded from the submission for this reason
+among others (\S\ref{sec:modelsel}).
+
+The label is recovered from the reply by matching
+\texttt{+2\,|\,+1\,|\,0\,|\,-1\,|\,-2} and taking the \emph{last}
+match, which favours a trailing final answer over an incidental
+numeral earlier in the text. A reply with no match is recorded as
+unparsed and counted as an error; we do not retry, resample, or fall
+back to a default label, so the reported accuracy is not inflated by
+silently repairing failures. In practice this never triggered for the
+submitted system: all three members produced 0 unparsed replies on both
+the open split (0/253 each) and the test split (0/50 each). The
+unparsed rates that do appear in this paper belong to models we did not
+submit and are reported with them in Table~\ref{tab:models}.
+
+\subsection{Model Selection}
+\label{sec:modelsel}
+
+We evaluated six models zero-shot on the open split under an identical
+prompt and identical decoding (Table~\ref{tab:models}) and selected the
+submission from those results alone; no test label, and no test
+instance, entered the decision. The two open-weight members are the top
+two by open-split accuracy (0.6838 and 0.6443) among models that fit in
+48\,GB of unified memory and can be made to answer without a reasoning
+preamble. Claude Opus was added as a third, architecturally and
+operationally independent member: it is the strongest member by
+macro-F$_1$ (0.474 vs.\ 0.407 and 0.363) and it is the one whose errors
+are least correlated with the others', which is the property a vote
+needs. The models we rejected were rejected for stated reasons ---
+lower accuracy under the same prompt (shisa-v2-qwen2.5-32b,
+Qwen3-30B-A3B-Instruct-2507, gpt-oss-20b) or no non-thinking mode
+together with the lowest accuracy in the comparison and a nonzero
+unparsed rate (DeepSeek-R1-Distill-Qwen-32B, 7/253 unparsed).
+
+\needrun{Selection was made on open-split point estimates, several of
+which are separated by roughly one point on $n{=}253$. The bootstrap
+intervals promised in \S\ref{sec:setup} will very likely overlap for
+the top three; when they are computed, this subsection should say so
+rather than leave the ranking looking sharper than the evidence
+supports.}
+
+% ============================================================
+\section{Experimental Setup}
+\label{sec:setup}
+% ============================================================
+
+\paragraph{Data and splits.}
+The open split contains 253 question--response pairs with gold labels
+and is the only labelled data we used for any decision affecting the
+submission. Its label distribution is heavily skewed:
+\texttt{+1} 139 (54.9\%), \texttt{0} 72 (28.5\%), \texttt{+2} 29
+(11.5\%), \texttt{-1} 11 (4.3\%), \texttt{-2} 2 (0.8\%). Two of the
+five classes therefore have single-digit support, which is the reason
+we report per-class F$_1$ alongside the aggregate and treat any
+claim about \texttt{-1} or \texttt{-2} as indicative only. The test
+split contains 50 unlabelled instances and was distributed without gold
+labels; it is visibly more balanced than the open split
+(\S\ref{sec:annot}) and its instances are markedly shorter, so test and
+open-split accuracies are not directly comparable quantities.
+
+No test label was used for prompt design, model selection, tie-breaking,
+or any other decision affecting the submission --- and none could have
+been, since no test labels were released to participants. The labels we
+do have for the test split are our own, produced after submission for
+the annotation study of \S\ref{sec:annot}; the protocol below records
+where they enter and where they do not.
+
+\paragraph{Models.}
+Local models are GGUF quantisations served by \texttt{llama.cpp}
+(build \texttt{b10273}, native \texttt{arm64}, Metal backend). Full
+identifiers:
+
+\begin{itemize}\itemsep2pt
+\item \texttt{unsloth/Qwen3.6-35B-A3B-GGUF},
+      \texttt{Qwen3.6-35B-A3B-UD-Q4\_K\_M.gguf} ($\approx$22\,GB; MoE,
+      $\approx$3\,B active)
+\item \texttt{unsloth/gemma-4-12b-it-GGUF},
+      \texttt{gemma-4-12b-it-Q8\_0.gguf} ($\approx$13\,GB; dense 12\,B)
+\item \texttt{mradermacher/shisa-v2-qwen2.5-32b-GGUF},
+      \texttt{shisa-v2-qwen2.5-32b.Q4\_K\_M.gguf}
+\item \texttt{unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF},
+      \texttt{Qwen3-30B-A3B-Instruct-2507-Q4\_K\_M.gguf}
+\item \texttt{unsloth/gpt-oss-20b-GGUF},
+      \texttt{gpt-oss-20b-F16.gguf} (native MXFP4)
+\item \texttt{unsloth/DeepSeek-R1-Distill-Qwen-32B-GGUF},
+      \texttt{DeepSeek-R1-Distill-Qwen-32B-Q4\_K\_M.gguf}
+\end{itemize}
+
+\noindent
+The proprietary member is Claude Opus, accessed through the Anthropic
+API. \todo{Record the exact model id and snapshot date; the saved
+prediction files carry no model metadata, so this must be recovered
+from the request logs rather than reconstructed from memory.}
+Quantisation is a confound we did not control for: the open-weight
+members are compared at different precisions (Q4\_K\_M vs.\ Q8\_0)
+because those are the quantisations that fit alongside a 48\,GB budget,
+so a gap between two open-weight rows conflates model and precision.
+
+\paragraph{Decoding and reproducibility.}
+Temperature $0$ throughout, 32 generation tokens, 8192-token context,
+all layers GPU-offloaded, one instance per request with no batching and
+no shared state between instances. Greedy decoding makes the sampler
+seed irrelevant for the headline runs; where we deliberately sample
+(the prompt-robustness probe of \S\ref{sec:sensitivity}) we set
+temperature $0.7$ and report results across seeds $\{0,1,2\}$
+explicitly. Local runs are deterministic in practice: repeated
+executions of the same model and prompt reproduced identical
+predictions.
+
+Hardware is a single Apple Silicon machine with 48\,GB of unified
+memory \checkme{exact chip}; only one model is resident at a time.
+Inference cost for the submitted open-weight members is small: a full
+253-instance open-split pass takes 3.1 minutes for Qwen3.6-35B-A3B
+(0.74\,s/instance) and 7.3 minutes for gemma-4-12b-it
+(1.73\,s/instance), and the 50-instance test pass takes about a minute
+each. For contrast, the dense 32\,B reasoning model we did not submit
+required 2\,h\,53\,m for the same 253 instances (41\,s/instance), with
+7 instances exceeding the 120\,s client timeout. The whole submitted
+system can therefore be reproduced on consumer hardware in minutes, API
+member aside.
+
+\paragraph{Metrics.}
+The official metric is accuracy. We additionally report macro-F$_1$ as
+a diagnostic: on a split where the majority class accounts for 54.9\%
+of instances, accuracy alone does not distinguish a system that has
+learnt the task from one that has collapsed onto the majority class, as
+Table~\ref{tab:main} makes clear. The gap is not hypothetical --- an
+unweighted fine-tuned encoder baseline reaches 0.5534 accuracy, within
+0.4\,pp of always predicting \texttt{+1}, at a macro-F$_1$ of 0.1526.
+We report no ordinal metrics, in keeping with the task's categorical
+treatment of the label set, but we note that the label set is plainly
+ordered and that our own error analysis (\S\ref{sec:probe}) is
+concerned almost entirely with adjacent-label confusions.
+
+\paragraph{Significance.}
+% Cheap to add, disproportionately increases credibility -- several of
+% our deltas are around one point.
+We report bootstrap confidence intervals ($B{=}10{,}000$) for accuracy
+and use McNemar's test for paired system comparisons. Both are
+computed from the saved per-instance predictions, so every comparison
+in the paper is paired on the same instances.
+\needrun{Bootstrap CIs and McNemar tests are not yet computed. The
+comparisons that most need them: ensemble vs.\ best single member
+($+1.2$\,pp on $n{=}253$), the top three models against each other, and
+every test-split comparison, where $n{=}50$ makes a two-instance
+difference worth 4\,pp.}
+
+\paragraph{Evaluation protocol.}
+We distinguish throughout between results obtained under official
+submission conditions and \emph{post-hoc} analyses. The latter are of
+two kinds, and we keep them apart: analyses against the released
+open-split gold, and analyses against labels we produced ourselves for
+the test split after submission. Table~\ref{tab:protocol} states which
+data were available at each stage.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{ll}
+\toprule
+Stage & Data used \\
+\midrule
+Prompt design       & Guidelines + open-split errors \\
+Model selection     & Open split gold \\
+Official submission & Test split, unlabelled \\
+Post-hoc probing (\S\ref{sec:probe}) & Open split gold \\
+Annotation study (\S\ref{sec:annot}) & Test split, our labels \\
+\bottomrule
+\end{tabular}
+\caption{Evaluation protocol. No test labels were accessed prior to
+submission; none were released to participants. Test-split scores in
+\S\ref{sec:annot} are agreement with our own post-hoc annotation, not
+official scores, and are labelled as such wherever they appear.}
+\label{tab:protocol}
+\end{table}
+
+The first row deserves the emphasis. Prompt design was not conditioned
+on the guidelines alone: three cues and examples were added after
+looking at open-split errors (\S\ref{sec:prompt}). That is within the
+rules --- the open split is labelled development data --- but it means
+the open-split numbers in Table~\ref{tab:main} are mildly optimistic as
+estimates of held-out performance, and we prefer to say so here rather
+than have a reader infer it from the commit history.
+
+\todo{Confirm before camera-ready whether official test gold has since
+been released. If it has, the test-split results should be recomputed
+against it and Table~\ref{tab:protocol} gains a row; if it has not, the
+\S\ref{sec:annot} framing as an agreement study rather than an
+evaluation must be stated in the abstract as well, not only here.}

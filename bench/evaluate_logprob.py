@@ -17,10 +17,12 @@ Usage:
 
 import argparse
 import json
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-LABELS = ["+2", "+1", "0", "-1", "-2"]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from metrics import LABELS, ordinal_block, print_ordinal_block
 
 
 def main() -> None:
@@ -61,10 +63,13 @@ def main() -> None:
         prob_sum[gold] += r["label_prob"][gold]
         prob_n[gold] += 1
 
+    ordinal = ordinal_block([r["gold"] for r in records], [r["prediction"] for r in records])
+
     print(f"n examples      : {total}")
     print(f"correct (argmax): {correct}")
     print(f"accuracy        : {accuracy:.4f}")
     print(f"macro F1        : {macro_f1:.4f}")
+    print_ordinal_block(ordinal)
     print(f"failed to score : {unparsed}")
     print()
     print("confusion matrix (rows=gold, cols=argmax pred; '?' = failed to score)")
@@ -88,6 +93,7 @@ def main() -> None:
         "accuracy": accuracy,
         "macro_f1": macro_f1,
         "f1_per_label": f1_per_label,
+        **ordinal,
         "unparsed": unparsed,
         "confusion": {f"{g}|{p}": c for (g, p), c in confusion.items()},
         "rank_histogram": rank_hist,

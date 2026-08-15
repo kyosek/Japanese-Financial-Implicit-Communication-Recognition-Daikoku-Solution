@@ -6,10 +6,12 @@ Usage:
 
 import argparse
 import json
+import sys
 from collections import Counter
 from pathlib import Path
 
-LABELS = ["+2", "+1", "0", "-1", "-2"]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from metrics import LABELS, ordinal_block, print_ordinal_block
 
 
 def main() -> None:
@@ -40,10 +42,13 @@ def main() -> None:
         f1_per_label[label] = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
     macro_f1 = sum(f1_per_label.values()) / len(LABELS)
 
+    ordinal = ordinal_block([r["gold"] for r in records], [r["prediction"] for r in records])
+
     print(f"n examples      : {total}")
     print(f"correct         : {correct}")
     print(f"accuracy        : {accuracy:.4f}")
     print(f"macro F1        : {macro_f1:.4f}")
+    print_ordinal_block(ordinal)
     print(f"unparsed labels : {unparsed}")
     print()
     print("confusion matrix (rows=gold, cols=predicted; '?' = unparsed)")
@@ -60,6 +65,7 @@ def main() -> None:
         "accuracy": accuracy,
         "macro_f1": macro_f1,
         "f1_per_label": f1_per_label,
+        **ordinal,
         "unparsed": unparsed,
         "confusion": {f"{g}|{p}": c for (g, p), c in confusion.items()},
     }
