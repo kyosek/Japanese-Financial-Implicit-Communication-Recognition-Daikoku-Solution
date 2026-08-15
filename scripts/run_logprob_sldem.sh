@@ -46,6 +46,11 @@ echo "[run_logprob_sldem $ALIAS] zero-shot logprob solve"
 "$PY" "$ROOT/bench/solve_logprob.py" --model "$ALIAS" \
   --out "$OUT/predictions_${ALIAS}_zeroshot_logprob.jsonl"
 
+echo "[run_logprob_sldem $ALIAS] evaluate raw (uncalibrated) predictions"
+"$PY" "$ROOT/bench/evaluate_logprob.py" \
+  --predictions "$OUT/predictions_${ALIAS}_zeroshot_logprob.jsonl" \
+  --report "$OUT/report_${ALIAS}_zeroshot_logprob.json"
+
 echo "[run_logprob_sldem $ALIAS] sld-em calibration"
 "$PY" "$ROOT/bench/calibrate_logprob.py" --method sld-em \
   --predictions "$OUT/predictions_${ALIAS}_zeroshot_logprob.jsonl" \
