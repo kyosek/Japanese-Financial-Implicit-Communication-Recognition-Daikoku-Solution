@@ -62,41 +62,17 @@ from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from metrics import LABEL_RANK, quadratic_weighted_kappa
+from multipart import heuristic_multipart
 from solve import (
     QUESTION_MARKER,
     REMINDER_MARKER,
+    RESPONSE_MARKER,
     call_model,
     extract_label,
     inject_annotation_rules,
 )
 
-RESPONSE_MARKER = "Company Response:"
 RANK_TO_LABEL = {rank: label for label, rank in LABEL_RANK.items()}
-
-# --- multi-part detection ---------------------------------------------------
-# Sentence-final request/interrogative markers. Japanese IR questions are often
-# phrased as requests (「〜を教えてほしい」) rather than syntactic questions, so
-# keying on 「か」 alone misses most of them.
-ASK_MARKERS = [
-    "ください", "下さい", "ほしい", "欲しい", "いただきたい", "頂きたい",
-    "伺いたい", "伺います", "お伺い", "聞きたい", "知りたい", "教えて",
-    "どうか", "いかがか", "考えか", "見解", "説明され", "答えられ",
-    "なぜ", "どのよう", "どの程度", "どのくらい", "どれくらい", "いくら",
-    "いつ", "どこ", "どちら", "どれ",
-]
-# A trailing 「か」 before the period is the other reliable signal.
-ASK_TAIL = re.compile(r"(か|の)[。？?！!]?$")
-
-# Discourse connectives that introduce an additional ask.
-CONNECTIVES = [
-    "また、", "また,", "あわせて", "併せて", "合わせて", "加えて",
-    "さらに", "更に", "それから", "次に", "もう一点", "もう1点", "もう１点",
-    "2点目", "２点目", "二点目", "1点目", "１点目", "一点目",
-    "2点", "２点", "二点", "3点", "３点", "三点", "2つ", "２つ", "二つ",
-    "3つ", "３つ", "三つ", "以下の点",
-]
-
-SENTENCE_SPLIT = re.compile(r"(?<=[。？?！!])\s*|\n+")
 
 
 def split_query(query):
@@ -118,23 +94,6 @@ def substitute_question(query, new_question):
     i = query.index(QUESTION_MARKER) + len(QUESTION_MARKER)
     j = query.index(RESPONSE_MARKER)
     return query[:i] + " " + new_question.strip() + "\n" + query[j:]
-
-
-def sentences(text):
-    return [s.strip() for s in SENTENCE_SPLIT.split(text) if s and s.strip()]
-
-
-def is_ask(sentence):
-    return any(m in sentence for m in ASK_MARKERS) or bool(ASK_TAIL.search(sentence))
-
-
-def heuristic_multipart(question):
-    """(is_multi, n_ask_sentences, connectives_found) -- the cheap regex view."""
-    sents = sentences(question)
-    n_ask = sum(1 for s in sents if is_ask(s))
-    found = [c for c in CONNECTIVES if c in question]
-    is_multi = n_ask >= 2 or (bool(found) and len(sents) >= 2)
-    return is_multi, n_ask, found
 
 
 # --- LLM stages -------------------------------------------------------------
@@ -288,7 +247,14 @@ def load_rows(path):
 
 def run_item(row, args):
     """Decompose -> joint label -> per-sub label + coverage, for one item."""
-    prep = (lambda q: q) if args.no_annotation_rules else inject_annotation_rules
+    # multipart_rule="off" on purpose: this experiment is what produced that
+    # rule, and a sub-question prompt has no bundled asks to aggregate. Keeping
+    # it off also keeps the joint arm comparable to the pre-rule baseline.
+    prep = (
+        (lambda q: q)
+        if args.no_annotation_rules
+        else (lambda q: inject_annotation_rules(q, multipart_rule="off"))
+    )
 
     joint_raw = ask(args.endpoint, prep(row["query"]), args.model, args.max_tokens)
     joint = extract_label(joint_raw or "")

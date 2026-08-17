@@ -11,6 +11,13 @@ by the human annotators) right before the Q&A block, giving the model the
 same fine-grained guidance the annotators had. Disable with
 --no-annotation-rules to reproduce the bare label-definition prompt.
 
+Alongside those we state an aggregation rule for questions that bundle several
+asks (30% of the public set), which the guideline itself leaves open -- see
+MULTIPART_RULE below and bench/decompose_experiment.py for the measurement it
+came from. --multipart-rule selects when it appears: never ("off"), in every
+prompt ("always"), or only for questions bench/multipart.py detects as
+bundling several asks ("gated").
+
 Usage:
     python bench/solve.py \
         --data JF-ICR_public_set.parquet \
@@ -32,12 +39,18 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from multipart import is_multipart
+
 VALID_LABELS = ["+2", "+1", "0", "-1", "-2"]
 # Longest-first so "+2"/"-2" aren't swallowed by a bare "2" match, etc.
 LABEL_PATTERN = re.compile(r"\+2|\+1|-2|-1|(?<![\d.+-])0(?![\d.])")
 
 QUESTION_MARKER = "Financial Question:"
+RESPONSE_MARKER = "Company Response:"
 REMINDER_MARKER = "Directly output the chosen label"
+
+MULTIPART_MODES = ("off", "always", "gated")
 
 # EBISU paper, Appendix A.3 "Specific Annotation Rules" -- the linguistic
 # signals and representative examples annotators used to tell adjacent
@@ -68,11 +81,55 @@ use these linguistic signals and examples to decide the label:
 
 """
 
+# Aggregation rule for questions that bundle several asks into one entry.
+# 30% of the public set does this (76/253), and on the items an LLM splitter
+# could actually cut, the sub-answers carry different labels 39% of the time --
+# so with no rule stated the label depends entirely on which piece the reader
+# weights. bench/decompose_experiment.py scored the candidate rules against
+# gold: taking the most committal piece tracked the annotators best
+# (QWK 0.555 vs 0.285 for labeling the bundle jointly, n=31), and taking the
+# most hedged piece was worst (0.249). Appended after ANNOTATION_RULES by
+# inject_annotation_rules(); disable with --no-multipart-rule.
+MULTIPART_RULE = """Handling a question that bundles several asks:
+Some questions contain more than one ask, typically joined by 「また、」「併せて」「加えて」「もう一点」, or announced up front as 「2点伺いたい」. The company response may commit on one ask while only hedging or giving background on another.
+In that case, do NOT average the parts together, and do NOT let the most hedged part decide the label. Label the response by its MOST COMMITTAL part -- the sub-answer sitting highest on the scale (closest to "+2").
+  Example: the response gives a qualified commitment to the first ask (「〜を目指しています」, i.e. "+1") and only background with no commitment to the second (i.e. "0"). The label is "+1", not "0".
 
-def inject_annotation_rules(query: str) -> str:
+"""
+
+
+def extract_question(query: str) -> str:
+    """The analyst's question text alone, out of a built prompt."""
+    i = query.index(QUESTION_MARKER) + len(QUESTION_MARKER)
+    j = query.index(RESPONSE_MARKER)
+    return query[i:j].strip()
+
+
+def wants_multipart_rule(query: str, mode: str) -> bool:
+    """Whether MULTIPART_RULE applies to this prompt under the given mode.
+
+    "gated" states the rule only for questions that actually bundle several
+    asks. Stating it unconditionally measurably leaks: in the "always" A/B it
+    changed 18 single-part predictions on the public set (net -0.017 accuracy
+    there) because every long IR response has spans at differing commitment
+    levels for "take the most committal part" to latch onto.
+    """
+    if mode == "off":
+        return False
+    if mode == "always":
+        return True
+    if mode == "gated":
+        return is_multipart(extract_question(query))
+    raise ValueError(f"unknown multipart rule mode: {mode!r}")
+
+
+def inject_annotation_rules(query: str, multipart_rule: str = "always") -> str:
     """Splice the Appendix A.3 rules into a dataset prompt, right before the Q&A block."""
     i = query.index(QUESTION_MARKER)
-    return query[:i] + ANNOTATION_RULES + query[i:]
+    rules = ANNOTATION_RULES
+    if wants_multipart_rule(query, multipart_rule):
+        rules += MULTIPART_RULE
+    return query[:i] + rules + query[i:]
 
 
 def extract_label(raw_text: str) -> str | None:
@@ -151,6 +208,13 @@ def main() -> None:
         action="store_true",
         help="omit the Appendix A.3 label-specific linguistic-signal rules (included by default)",
     )
+    parser.add_argument(
+        "--multipart-rule",
+        choices=MULTIPART_MODES,
+        default="always",
+        help="when to state the bundled-question aggregation rule: never / in every prompt / "
+        "only for questions detected as bundling several asks (default: always)",
+    )
     args = parser.parse_args()
 
     df = pd.read_parquet(args.data)
@@ -171,7 +235,11 @@ def main() -> None:
     results = []
     with out_path.open("w", encoding="utf-8") as f:
         for row in tqdm(df.itertuples(), total=len(df), desc="solving"):
-            query = row.query if args.no_annotation_rules else inject_annotation_rules(row.query)
+            query = (
+                row.query
+                if args.no_annotation_rules
+                else inject_annotation_rules(row.query, multipart_rule=args.multipart_rule)
+            )
             prompt = build_prompt(query, exemplars) if exemplars else query
             start = time.monotonic()
             try:
