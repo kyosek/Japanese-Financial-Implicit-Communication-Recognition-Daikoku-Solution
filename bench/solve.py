@@ -173,8 +173,21 @@ def build_prompt(target_query: str, exemplars: list[dict]) -> str:
 
 
 def call_model(
-    endpoint: str, prompt: str, model: str, temperature: float, max_tokens: int, seed: int | None = None
-) -> str:
+    endpoint: str,
+    prompt: str,
+    model: str,
+    temperature: float,
+    max_tokens: int,
+    seed: int | None = None,
+    timeout: float = 120,
+) -> tuple[str, str | None]:
+    """Returns (content, finish_reason).
+
+    finish_reason matters for thinking models: served with --reasoning on, the
+    token budget covers the thought too, so a response cut off mid-thought
+    comes back with empty content and finish_reason "length". Without it, that
+    truncation is indistinguishable from a model that simply answered nothing.
+    """
     payload = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
@@ -183,9 +196,10 @@ def call_model(
     }
     if seed is not None:
         payload["seed"] = seed
-    resp = requests.post(f"{endpoint}/v1/chat/completions", json=payload, timeout=120)
+    resp = requests.post(f"{endpoint}/v1/chat/completions", json=payload, timeout=timeout)
     resp.raise_for_status()
-    return resp.json()["choices"][0]["message"]["content"]
+    choice = resp.json()["choices"][0]
+    return choice["message"]["content"], choice.get("finish_reason")
 
 
 def main() -> None:
@@ -196,6 +210,12 @@ def main() -> None:
     parser.add_argument("--out", default="outputs/predictions.jsonl")
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--max-tokens", type=int, default=32)
+    parser.add_argument(
+        "--timeout",
+        type=float,
+        default=120,
+        help="per-request timeout in seconds (raise it for thinking runs, which generate far more tokens)",
+    )
     parser.add_argument("--limit", type=int, default=None, help="only run the first N eval rows (smoke test)")
     parser.add_argument(
         "--few-shot-k",
@@ -243,11 +263,18 @@ def main() -> None:
             prompt = build_prompt(query, exemplars) if exemplars else query
             start = time.monotonic()
             try:
-                raw = call_model(args.endpoint, prompt, args.model, args.temperature, args.max_tokens)
+                raw, finish_reason = call_model(
+                    args.endpoint,
+                    prompt,
+                    args.model,
+                    args.temperature,
+                    args.max_tokens,
+                    timeout=args.timeout,
+                )
                 label = extract_label(raw)
             except requests.RequestException as exc:
                 print(f"\nid={row.id}: request failed: {exc}", file=sys.stderr)
-                raw, label = None, None
+                raw, label, finish_reason = None, None, "error"
             elapsed = time.monotonic() - start
 
             record = {
@@ -255,6 +282,7 @@ def main() -> None:
                 "gold": getattr(row, "answer", None),
                 "raw_response": raw,
                 "prediction": label,
+                "finish_reason": finish_reason,
                 "elapsed_s": round(elapsed, 2),
             }
             results.append(record)
@@ -264,6 +292,13 @@ def main() -> None:
     n_unparsed = sum(1 for r in results if r["prediction"] is None)
     if n_unparsed:
         print(f"warning: {n_unparsed}/{len(results)} responses had no extractable label", file=sys.stderr)
+    n_truncated = sum(1 for r in results if r["finish_reason"] == "length")
+    if n_truncated:
+        print(
+            f"warning: {n_truncated}/{len(results)} responses hit the {args.max_tokens}-token cap "
+            f"-- raise --max-tokens (thinking runs need far more than the default 32)",
+            file=sys.stderr,
+        )
     print(f"wrote {len(results)} predictions to {out_path}")
 
 
