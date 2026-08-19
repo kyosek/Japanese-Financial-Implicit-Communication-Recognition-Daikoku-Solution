@@ -109,12 +109,20 @@ def softmax_over_labels(logprobs: dict[str, float]) -> dict[str, float]:
     return {label: v / z for label, v in exps.items()}
 
 
-def sanity_check(session: requests.Session, endpoint: str, model: str, df: pd.DataFrame, n: int, no_annotation_rules: bool) -> None:
+def sanity_check(
+    session: requests.Session,
+    endpoint: str,
+    model: str,
+    df: pd.DataFrame,
+    n: int,
+    no_annotation_rules: bool,
+    multipart_rule: str = "always",
+) -> None:
     """Cross-check log-prob argmax against free generation on a few rows before a full run."""
     sample = df.head(n)
     agree = 0
     for row in sample.itertuples():
-        query = row.query if no_annotation_rules else inject_annotation_rules(row.query)
+        query = row.query if no_annotation_rules else inject_annotation_rules(row.query, multipart_rule)
         gen_resp = session.post(
             f"{endpoint}/v1/chat/completions",
             json={
@@ -166,6 +174,14 @@ def main() -> None:
         help="omit the Appendix A.3 label-specific linguistic-signal rules (included by default)",
     )
     parser.add_argument(
+        "--multipart-rule",
+        choices=["off", "always", "gated"],
+        default="always",
+        help="when to state the multi-part aggregation rule, mirroring solve.py. Default 'always' matches "
+        "the historical behaviour; 'gated' adds it only to questions bench/multipart.py flags as bundling "
+        "several asks, and is the right choice on a set with no multi-part questions",
+    )
+    parser.add_argument(
         "--sanity-check-n",
         type=int,
         default=5,
@@ -185,7 +201,9 @@ def main() -> None:
     session = requests.Session()
 
     if args.sanity_check_n > 0:
-        sanity_check(session, args.endpoint, args.model, df, args.sanity_check_n, args.no_annotation_rules)
+        sanity_check(
+            session, args.endpoint, args.model, df, args.sanity_check_n, args.no_annotation_rules, args.multipart_rule
+        )
 
     if args.limit:
         df = df.head(args.limit)
@@ -196,7 +214,7 @@ def main() -> None:
     results = []
     with out_path.open("w", encoding="utf-8") as f:
         for row in tqdm(df.itertuples(), total=len(df), desc="scoring"):
-            query = row.query if args.no_annotation_rules else inject_annotation_rules(row.query)
+            query = row.query if args.no_annotation_rules else inject_annotation_rules(row.query, args.multipart_rule)
             prompt = build_prompt(query, exemplars) if exemplars else query
             start = time.monotonic()
             try:
@@ -215,7 +233,9 @@ def main() -> None:
 
             record = {
                 "id": int(row.id),
-                "gold": row.answer,
+                # The competition test parquet ships without an `answer` column,
+                # so gold is absent when scoring the real submission set.
+                "gold": getattr(row, "answer", None),
                 "prediction": argmax_label,
                 "expected_score": expected_score,
                 "label_logprob": label_logprob,

@@ -43,10 +43,18 @@ from quota_audit import LABELS, load_predictions, parse_quota
 from solve import VALID_LABELS
 
 
-def load_runs(pattern: str, n_expected: int) -> dict[str, dict[int, str]]:
-    """Every prediction file matching the glob that covers the full item set."""
+def load_runs(pattern: str, n_expected: int, exclude: Path) -> dict[str, dict[int, str]]:
+    """Every prediction file matching the glob that covers the full item set.
+
+    The audited file is excluded even when the glob matches it: letting a
+    labelling vote on itself inflates the consensus of exactly the items it got
+    wrong, which is the opposite of what this measures.
+    """
     runs = {}
+    exclude = exclude.resolve()
     for path in sorted(glob.glob(pattern)):
+        if Path(path).resolve() == exclude:
+            continue
         rows = [json.loads(line) for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
         if len(rows) != n_expected:
             continue
@@ -73,7 +81,7 @@ def main() -> None:
         print("counts already meet the quota -- nothing flagged")
         return
 
-    runs = load_runs(args.runs, len(preds))
+    runs = load_runs(args.runs, len(preds), Path(args.predictions))
     if len(runs) < 2:
         sys.exit(f"--runs matched {len(runs)} usable run(s); consensus needs at least 2")
     print(f"{len(runs)} runs over {len(preds)} items; destinations {under}\n")

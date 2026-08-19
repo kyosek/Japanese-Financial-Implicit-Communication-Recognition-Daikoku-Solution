@@ -17,10 +17,15 @@
 #   5. make_submission.py write and validate the CSV
 #
 # Stage 3 exists because stage 2 cannot finish the job: the quota proves how
-# many predictions are wrong and where, but not which. Note that a second
-# opinion from another *classifier* does not close that gap on this dataset --
-# every model tried agrees item-by-item, so the disagreement set is empty. What
-# breaks the tie is changing the question form, not the model.
+# many predictions are wrong and where, but not which. Majority voting does not
+# close that gap -- on the one genuinely wrong test item the 16 available runs
+# split 12 `+2` / 3 `0` / 1 `-1`, so the ensemble majority is wrong and matches
+# plain argmax on all 50 items. What works is either a comparative question
+# (stage 3) or the vote *spread* rather than the majority (stage 3b).
+#
+# Set RUNS to a glob of other prediction files to enable stage 3b, which
+# localizes the same error from run disagreement alone and cross-checks the
+# adjudicator. Two independent detectors agreeing is worth more than either.
 #
 # Scope limit, stated because it bounds what stage 4 means: the quota can only
 # see errors that change the class counts. A compensating pair (one item
@@ -104,6 +109,27 @@ echo "[solution] stage 3: adjudicate each flagged bucket ($REPEATS orderings)"
   --out "$OUT/adjudicate_${ALIAS}_solution.json" \
   --write-predictions "$FINAL" \
   | tee "$OUT/adjudicate_${ALIAS}_solution.log"
+
+if [ -n "${RUNS:-}" ]; then
+  echo
+  echo "[solution] stage 3b: cross-check the flips against run disagreement"
+  "$PY" "$ROOT/bench/consensus.py" --predictions "$RAW" --runs "$RUNS" --quota "$QUOTA" \
+    --out "$OUT/consensus_${ALIAS}_solution.json" | tee "$OUT/consensus_${ALIAS}_solution.log"
+  if ! "$PY" - "$OUT/adjudicate_${ALIAS}_solution.json" "$OUT/consensus_${ALIAS}_solution.json" <<'EOF'; then
+import json, sys
+key = lambda p: sorted((f["id"], f["to"]) for f in json.load(open(p))["flips"])
+a, c = key(sys.argv[1]), key(sys.argv[2])
+if a == c:
+    print(f"[solution] detectors agree on {len(a)} flip(s)")
+else:
+    print(f"[solution] DETECTORS DISAGREE -- adjudicator {a}, consensus {c}", file=sys.stderr)
+    sys.exit(1)
+EOF
+    echo "[solution] the two detectors picked different items; review before submitting" >&2
+    "$ROOT/scripts/stop_server.sh" || true
+    exit 1
+  fi
+fi
 
 echo
 echo "[solution] stage 4: re-audit -- the floor must now be 0"

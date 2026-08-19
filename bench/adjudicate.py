@@ -47,6 +47,7 @@ Usage:
 """
 
 import argparse
+import collections
 import json
 import re
 import sys
@@ -89,23 +90,37 @@ def build_prompt(items: list[dict], over: str, under: list[str], surplus: int, t
     blocks = []
     for n, it in enumerate(items, 1):
         blocks.append(f"[{n}]\nFinancial Question: {it['question']}\nCompany Response: {it['response']}\n")
+    if len(under) == 1:
+        fmt = "Output only the item numbers, comma-separated. Do not explain."
+    else:
+        # With several destinations the label is a second question, and the
+        # model's own P(y|x) cannot answer it: on the item it got wrong those
+        # probabilities are exactly the ones that are miscalibrated. Ask instead.
+        fmt = (
+            f"For each, give the item number and its true label as number:label, comma-separated "
+            f"(for example 3:{under[0]}). The label must be one of {targets}. Do not explain."
+        )
     tail = (
         f"\nWhich item{plural} {'are' if surplus > 1 else 'is'} mislabelled? "
-        f"Rank the {top_k} most likely, most likely first.\n"
-        "Output only the item numbers, comma-separated. Do not explain.\n"
-        "Answer:"
+        f"Rank the {top_k} most likely, most likely first.\n" + fmt + "\nAnswer:"
     )
     return head + "\n".join(blocks) + tail
 
 
-def parse_ranking(text: str, n_items: int) -> list[int]:
-    """Item numbers in the order named, deduplicated, in-range only."""
+def parse_ranking(text: str, n_items: int, labelled: bool) -> list[tuple[int, str | None]]:
+    """(item number, destination label) pairs in the order named, deduplicated.
+
+    The label is None unless the prompt asked for `number:label` form and this
+    entry supplied a valid one.
+    """
+    pattern = r"(\d+)\s*:\s*([+-]?[012])" if labelled else r"(\d+)()"
     seen, out = set(), []
-    for tok in re.findall(r"\d+", text):
-        v = int(tok)
-        if 1 <= v <= n_items and v not in seen:
-            seen.add(v)
-            out.append(v)
+    for num, lab in re.findall(pattern, text):
+        v = int(num)
+        if not (1 <= v <= n_items) or v in seen:
+            continue
+        seen.add(v)
+        out.append((v, lab if lab in VALID_LABELS else None))
     return out
 
 
@@ -160,6 +175,7 @@ def main() -> None:
         print(f"\nbucket {label!r}: {len(items)} candidates, surplus {surplus}, true label in {under}")
 
         rounds, first_choice = [], Counter()
+        destination_votes: dict[int, Counter] = collections.defaultdict(Counter)
         for rep in range(args.repeats):
             # rotate rather than shuffle: deterministic, reproducible without a
             # seed, and it moves every candidate through a different slot.
@@ -168,16 +184,22 @@ def main() -> None:
             content, finish = call_model(
                 args.endpoint, prompt, args.model, args.temperature, args.max_tokens, timeout=args.timeout
             )
-            picked = [order[n - 1]["id"] for n in parse_ranking(content, len(order))]
+            parsed = [(order[n - 1]["id"], lab) for n, lab in parse_ranking(content, len(order), len(under) > 1)]
+            picked = [i for i, _ in parsed]
             note = f"  (finish={finish})" if finish != "stop" else ""
-            slot = order.index(next(o for o in order if o["id"] == picked[0])) + 1 if picked else None
+            slot = next((n for n, o in enumerate(order, 1) if o["id"] == picked[0]), None) if picked else None
             print(
                 f"  round {rep + 1}: reply={content.strip()[:60]!r}{note}"
                 + (f" -> top id={picked[0]} (slot {slot} of {len(order)})" if picked else " -> unparseable")
             )
-            if picked:
-                first_choice[picked[0]] += 1
-            rounds.append({"rotation": rep, "ranking": picked, "raw": content, "finish": finish})
+            # Vote over each round's top `surplus` picks, not just first place:
+            # with a surplus above 1 the bucket needs that many names, and an
+            # item that is consistently second would otherwise never be counted.
+            for i, lab in parsed[:surplus]:
+                first_choice[i] += 1
+                if lab:
+                    destination_votes[i][lab] += 1
+            rounds.append({"rotation": rep, "ranking": parsed, "raw": content, "finish": finish})
 
         if not first_choice:
             print("  no parseable item number in any round")
@@ -187,13 +209,21 @@ def main() -> None:
             continue
 
         ranking = [i for i, _ in first_choice.most_common()]
-        print(f"  vote over {args.repeats} ordering(s):")
+        print(f"  votes over {args.repeats} ordering(s), top-{surplus} per round:")
         for rank, (i, votes) in enumerate(first_choice.most_common(top_k), 1):
             mark = "  <-- adjudicated" if rank <= surplus else ""
             p = f"   model p({label})={probs[i][label]:.3f}" if i in probs else ""
-            print(f"    {rank}. id={i}  {votes}/{args.repeats} first-place{p}{mark}")
+            print(f"    {rank}. id={i}  {votes}/{args.repeats} votes{p}{mark}")
         results.append(
-            {"bucket": label, "under": under, "surplus": surplus, "candidates": ids, "rounds": rounds, "ranking": ranking}
+            {
+                "bucket": label,
+                "under": under,
+                "surplus": surplus,
+                "candidates": ids,
+                "rounds": rounds,
+                "ranking": ranking,
+                "destinations": {i: dict(v) for i, v in destination_votes.items()},
+            }
         )
 
     # Each adjudicated item moves out of its over-full bucket into an under-full
@@ -204,10 +234,13 @@ def main() -> None:
         for i in r["ranking"][: r["surplus"]]:
             if len(r["under"]) == 1:
                 flips[i] = r["under"][0]
-            elif i in probs:
-                flips[i] = max(r["under"], key=lambda lab: probs[i][lab])
+            elif r["destinations"].get(i):
+                flips[i] = Counter(r["destinations"][i]).most_common(1)[0][0]
             else:
-                sys.exit(f"id={i} has {len(r['under'])} candidate destinations {r['under']} and no probabilities to rank them")
+                sys.exit(
+                    f"id={i} has {len(r['under'])} candidate destinations {r['under']} and the model named "
+                    "none of them; rerun with more --repeats or resolve by hand"
+                )
 
     print("\nadjudicated flips: " + (", ".join(f"{i}: {preds[i]} -> {lab}" for i, lab in flips.items()) or "none"))
     if args.out:
