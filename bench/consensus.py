@@ -1,4 +1,4 @@
-"""Localize a quota-flagged error by run disagreement, with no extra model call.
+"""Localise a quota-flagged error by run disagreement, with no extra model call.
 
 bench/quota_audit.py proves how many predictions are wrong and which class
 buckets hold them, but not which item. bench/adjudicate.py closes that with a
@@ -102,7 +102,7 @@ def main() -> None:
             spread = " ".join(f"{k}:{v}" for k, v in votes.most_common())
             print(f"  {frac:.2f} agreement  id={i}  [{spread}]{mark}")
         if scored[0][0] == 1.0:
-            print("  every candidate is unanimous -- disagreement cannot localize this bucket")
+            print("  every candidate is unanimous -- disagreement cannot localise this bucket")
             continue
         if surplus < len(scored) and scored[surplus - 1][0] == scored[surplus][0]:
             print(f"  tie at the cut ({scored[surplus - 1][0]:.2f}) -- use bench/adjudicate.py instead")

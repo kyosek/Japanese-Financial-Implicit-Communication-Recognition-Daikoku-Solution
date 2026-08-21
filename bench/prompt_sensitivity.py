@@ -20,7 +20,7 @@ accuracy/macro-F1 across seeds, plus a check of whether the spread across
 paraphrases exceeds the largest seed-noise observed.
 
 --probe label-order: reruns the zero-shot **logprob** eval (solve_logprob.py
-verbalizer scoring -- deterministic, no seed axis needed) under
+verbaliser scoring -- deterministic, no seed axis needed) under
 bench/label_orders.py's orderings of how the 5 labels are *listed* in the
 fixed instruction block (the rules text and the label->meaning mapping are
 unchanged; only the order they're presented in changes). The label tokens
@@ -136,7 +136,7 @@ def run_rules_probe(df: pd.DataFrame, args: argparse.Namespace) -> dict:
     return all_metrics
 
 
-def summarize_rules_probe(all_metrics: dict[str, list[dict]]) -> dict:
+def summarise_rules_probe(all_metrics: dict[str, list[dict]]) -> dict:
     summary = {}
     for variant, metrics_list in all_metrics.items():
         accs = [m["accuracy"] for m in metrics_list]
@@ -296,7 +296,7 @@ def main() -> None:
 
     if args.probe == "rules":
         all_metrics = run_rules_probe(df, args)
-        summary = summarize_rules_probe(all_metrics)
+        summary = summarise_rules_probe(all_metrics)
         print_rules_summary(summary)
         summary_path = Path(f"{args.out_prefix}_summary_rules.json")
     else:

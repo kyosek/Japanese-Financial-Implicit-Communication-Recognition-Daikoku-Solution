@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Log-prob verbalizer pipeline (solve_logprob -> evaluate raw -> sld-em
+# Log-prob verbaliser pipeline (solve_logprob -> evaluate raw -> sld-em
 # calibrate -> evaluate calibrated) over JF-ICR_test_participant_labelled.parquet.
 # Mirrors run_logprob_sldem.sh but targets the labelled test-participant set
 # instead of the public set.

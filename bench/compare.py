@@ -1,4 +1,4 @@
-"""Summarize accuracy across multiple evaluate.py report.json files.
+"""Summarise accuracy across multiple evaluate.py report.json files.
 
 Usage:
     python bench/compare.py \

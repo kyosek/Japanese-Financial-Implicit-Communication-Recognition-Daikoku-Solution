@@ -83,7 +83,7 @@ def extract_response(query: str) -> str:
     return middle[i:].strip()
 
 
-def featurize(text: str) -> list[float]:
+def featurise(text: str) -> list[float]:
     counts = [float(sum(text.count(phrase) for phrase in phrases)) for phrases in CUE_GROUPS.values()]
     return [*counts, len(text) / 100.0]
 
@@ -94,7 +94,7 @@ def main() -> None:
     parser.add_argument("--out", default="outputs/predictions_lexicon.jsonl")
     parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--C", type=float, default=1.0, help="logistic regression inverse regularization strength")
+    parser.add_argument("--C", type=float, default=1.0, help="logistic regression inverse regularisation strength")
     parser.add_argument(
         "--class-weight",
         choices=["none", "balanced"],
@@ -106,7 +106,7 @@ def main() -> None:
 
     df = pd.read_parquet(args.data)
     texts = [extract_response(q) for q in df["query"]]
-    X = np.array([featurize(t) for t in texts])
+    X = np.array([featurise(t) for t in texts])
     y = df["answer"].to_numpy()
     ids = df["id"].to_numpy()
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs the log-prob verbalizer pipeline (solve_logprob -> calibrate sld-em ->
+# Runs the log-prob verbaliser pipeline (solve_logprob -> calibrate sld-em ->
 # evaluate) for one model, unattended: stops any running server, starts the
 # requested model, waits for it to become healthy, solves, calibrates,
 # evaluates, then stops the server.

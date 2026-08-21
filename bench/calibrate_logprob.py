@@ -1,4 +1,4 @@
-"""Post-hoc prior correction for verbalizer log-prob predictions.
+"""Post-hoc prior correction for verbaliser log-prob predictions.
 
 Two label-free calibration methods on solve_logprob.py's output -- both pure
 post-processing of the stored P(y|x), no extra LLM calls, no gold labels used:
@@ -6,7 +6,7 @@ post-processing of the stored P(y|x), no extra LLM calls, no gold labels used:
 --method batch (default): Batch calibration (Zhou et al. 2023). Estimates the
 model's contextual prior as the mean predicted distribution across the test
 set itself, then divides each row's P(y|x) by that estimated marginal and
-renormalizes over the 5 labels:
+renormalises over the 5 labels:
 
     p_calibrated(y|x) proportional to p(y|x) / q(y),   q(y) = mean_x p(y|x)
 
@@ -15,7 +15,7 @@ the raw P(y|x) as calibrated under an assumed prior pi_train(y) (--train-prior,
 default: uniform over the 5 labels -- the standard simplifying assumption when
 no canonical content-free baseline is available) and alternates:
 
-    E-step: p_test(y|x) proportional to [pi_test(y) / pi_train(y)] * p_train(y|x), renormalized
+    E-step: p_test(y|x) proportional to [pi_test(y) / pi_train(y)] * p_train(y|x), renormalised
     M-step: pi_test(y) = mean_x p_test(y|x)
 
 starting from pi_test = pi_train, until pi_test stops moving. Unlike batch
@@ -26,23 +26,23 @@ Both target the same failure mode: a model over- or under-predicting one
 label irrespective of instance content.
 
 SLD-EM instability on rare classes: if a class's raw posterior mass is
-already small and skewed, the M-step can drive its estimated pi_test toward
+already small and skewed, the M-step can drive its estimated pi_test towards
 0. Once at (or near) 0, the E-step's pi_test(y)/pi_train(y) ratio zeroes that
 label out of every row's adjusted posterior, which zeroes the next M-step
 estimate too -- an absorbing state a class can fall into but never leave.
 Confirmed on this dataset: gold `-1` is 11/253 rows (4.3%) and gemma4's raw
 posteriors already gave it little mass; unconstrained SLD-EM drove
 pi_test(-1) to 0.000, and the resulting predictions never picked `-1` even
-where a row's raw posterior favored it. Two standard stabilizers, both
+where a row's raw posterior favoured it. Two standard stabilisers, both
 applied after each M-step, before the next E-step:
 
 - --prior-floor F: clamp every class's estimated share to at least F, then
-  renormalize. Keeps pi_test(y)/pi_train(y) bounded away from 0, so a rare
+  renormalise. Keeps pi_test(y)/pi_train(y) bounded away from 0, so a rare
   class stays reachable in every row's adjusted posterior instead of being
   multiplied out entirely.
 - --damping D: blend the new M-step estimate with the previous iterate
   (pi_test_new <- D * pi_test_old + (1-D) * pi_test_new), D in [0, 1). Slows
-  the walk toward any fixed point, including a collapsing one -- on its own
+  the walk towards any fixed point, including a collapsing one -- on its own
   it delays collapse rather than preventing it, so pair it with a floor
   rather than relying on damping alone.
 
@@ -91,7 +91,7 @@ def batch_calibrate(records: list[dict]) -> tuple[list[dict | None], dict]:
     return calibrated, {"q": prior}
 
 
-def clamp_and_renormalize(prior: dict[str, float], floor: float) -> dict[str, float]:
+def clamp_and_renormalise(prior: dict[str, float], floor: float) -> dict[str, float]:
     if floor <= 0:
         return prior
     clamped = {label: max(v, floor) for label, v in prior.items()}
@@ -108,7 +108,7 @@ def sld_em(
     damping: float = 0.0,
 ) -> tuple[list[dict | None], dict]:
     valid_idx = [i for i, r in enumerate(records) if r["label_prob"] is not None]
-    test_prior = clamp_and_renormalize(dict(train_prior), prior_floor)
+    test_prior = clamp_and_renormalise(dict(train_prior), prior_floor)
     adjusted = [None] * len(records)
 
     n_iter = 0
@@ -119,7 +119,7 @@ def sld_em(
         new_prior = {label: sum(adjusted[i][label] for i in valid_idx) / len(valid_idx) for label in LABELS}
         if damping > 0:
             new_prior = {label: damping * test_prior[label] + (1 - damping) * new_prior[label] for label in LABELS}
-        new_prior = clamp_and_renormalize(new_prior, prior_floor)
+        new_prior = clamp_and_renormalise(new_prior, prior_floor)
         delta = max(abs(new_prior[label] - test_prior[label]) for label in LABELS)
         test_prior = new_prior
         if delta < tol:
@@ -145,14 +145,14 @@ def main() -> None:
         "--prior-floor",
         type=float,
         default=0.01,
-        help="sld-em only: minimum share for any class's estimated prior after each M-step, then renormalized "
+        help="sld-em only: minimum share for any class's estimated prior after each M-step, then renormalised "
         "-- prevents a rare class's prior from being absorbed at exactly 0 (0 disables, reproducing unconstrained SLD-EM)",
     )
     parser.add_argument(
         "--damping",
         type=float,
         default=0.0,
-        help="sld-em only: blend weight in [0, 1) toward the previous iterate's prior each M-step "
+        help="sld-em only: blend weight in [0, 1) towards the previous iterate's prior each M-step "
         "(0 = standard EM; use alongside --prior-floor, not as a substitute for it)",
     )
     args = parser.parse_args()

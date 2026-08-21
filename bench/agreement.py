@@ -4,7 +4,7 @@ Answers the question the single-annotator public set cannot: when models score
 ~0.50 QWK there, is that model weakness or an ambiguous task? Compare the
 model QWK against the human ceiling this reports. A model at or above the mean
 annotator-vs-annotator QWK is not "failing" -- it is at the noise floor of the
-label, and the remaining headroom is a guideline problem, not a modeling one.
+label, and the remaining headroom is a guideline problem, not a modelling one.
 
 Reports:
   - pairwise QWK between every annotator pair, and their mean (the ceiling)
@@ -17,7 +17,7 @@ Reports:
     annotator. This is the defensible version of scoring against a model's own
     top-2 -- the acceptable set is defined by observed human variation rather
     than by the model's own probability ranking, so a model cannot earn credit
-    by hedging toward the majority class.
+    by hedging towards the majority class.
 
 Usage:
     python bench/agreement.py --sheets annotation/round1 \
@@ -40,7 +40,7 @@ from metrics import LABELS, LABEL_RANK, quadratic_weighted_kappa
 ORDERED = sorted(LABELS, key=lambda l: LABEL_RANK[l])
 
 
-def normalize_label(raw):
+def normalise_label(raw):
     """Accept '+1', '1', '＋１', ' 0 ' etc.; return None for blanks."""
     if raw is None:
         return None
@@ -72,13 +72,13 @@ def load_sheets(sheet_dir):
         if path.suffix == ".csv":
             with path.open(encoding="utf-8-sig", newline="") as handle:
                 for row in csv.DictReader(handle):
-                    label = normalize_label(row.get("label"))
+                    label = normalise_label(row.get("label"))
                     if label:
                         labels[int(row["id"])] = label
         else:
             for line in path.open(encoding="utf-8"):
                 row = json.loads(line)
-                label = normalize_label(row.get("label"))
+                label = normalise_label(row.get("label"))
                 if label:
                     labels[int(row["id"])] = label
 
@@ -171,7 +171,7 @@ def main():
     complete = [i for i in all_ids if all(i in sheets[n] for n in names)]
 
     print(f"annotators      : {', '.join(names)}")
-    print(f"items labeled   : {len(all_ids)} ({len(complete)} labeled by all {len(names)})")
+    print(f"items labelled  : {len(all_ids)} ({len(complete)} labelled by all {len(names)})")
     coverage = {n: len(sheets[n]) for n in names}
     if len(set(coverage.values())) > 1:
         print(f"  per-annotator counts: {coverage}")
@@ -197,7 +197,7 @@ def main():
     low, high = bootstrap_ci(units, args.bootstrap, args.seed)
     print("\nKrippendorff's alpha (ordinal)")
     if alpha is None:
-        print("  n/a (not enough pairable judgments)")
+        print("  n/a (not enough pairable judgements)")
     else:
         ci = f"  95% CI [{low:.4f}, {high:.4f}]" if low is not None else ""
         print(f"  overall  n={len(units):3d}  alpha={alpha:.4f}{ci}")

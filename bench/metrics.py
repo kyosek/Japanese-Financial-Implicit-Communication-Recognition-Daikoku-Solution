@@ -9,7 +9,7 @@ misreads this task twice over:
   just answers "+1" every time already scores 0.549 accuracy and 0.949
   "within one level" -- numbers that look respectable but carry no signal.
 
-Quadratic weighted kappa fixes both: errors are penalized by the squared
+Quadratic weighted kappa fixes both: errors are penalised by the squared
 distance along the scale, and the score is chance-corrected against the
 marginals, so the always-majority baseline lands at exactly 0.0.
 """

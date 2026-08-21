@@ -1,4 +1,4 @@
-"""Score every JF-ICR prompt by verbalizer log-prob instead of free generation.
+"""Score every JF-ICR prompt by verbaliser log-prob instead of free generation.
 
 Rather than letting the model generate freely and parsing a label out of the
 text (solve.py), this computes P(label | prompt) directly for each of the

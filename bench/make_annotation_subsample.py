@@ -1,4 +1,4 @@
-"""Draw a stratified subsample of JF-ICR for blind multi-annotator re-labeling.
+"""Draw a stratified subsample of JF-ICR for blind multi-annotator re-labelling.
 
 Why this exists: every model we have scores ~0.65 accuracy / ~0.50 QWK on the
 public set and ~0.93 / ~0.97 on the participant set. We cannot currently tell
@@ -17,7 +17,7 @@ Two strata, recorded per item so estimates can be reweighted:
   needing reweighting for population-level claims.
 
 When --predictions files are supplied, boundary items are ranked by model
-disagreement (mean normalized entropy over the supplied label distributions,
+disagreement (mean normalised entropy over the supplied label distributions,
 plus argmax spread across files) rather than drawn at random from the
 boundary classes. Note the resulting circularity: those items are selected
 for being model-hard, so "humans also disagree here" is a claim about
@@ -60,7 +60,7 @@ BOUNDARY_LABELS = sorted({lbl for pair in BOUNDARY_PAIRS for lbl in pair}, key=l
 # without having to hold the paper open. Deliberately the bare label
 # definitions, not the Appendix A.3 rules -- if we hand annotators the same
 # fine-grained cues we hand the models, we measure agreement with the
-# guideline rather than the difficulty of the judgment.
+# guideline rather than the difficulty of the judgement.
 LABEL_GUIDE = """JF-ICR intent labels (choose exactly one per row):
 
   +2  Strong Commitment              明確・確定的なコミットメント
@@ -118,7 +118,7 @@ def load_dataset(path):
 
 
 def load_uncertainty(prediction_paths):
-    """Mean normalized entropy and argmax spread per id, across prediction files.
+    """Mean normalised entropy and argmax spread per id, across prediction files.
 
     Files without label_prob contribute only their argmax. Returns {} when no
     usable prediction files were supplied.
@@ -272,8 +272,8 @@ def main():
 
     rng = random.Random(args.seed)
     rows = load_dataset(args.data)
-    labeled = [r for r in rows if r["gold"]]
-    print(f"loaded {len(rows)} rows from {args.data} ({len(labeled)} with a gold label)")
+    labelled = [r for r in rows if r["gold"]]
+    print(f"loaded {len(rows)} rows from {args.data} ({len(labelled)} with a gold label)")
 
     uncertainty = load_uncertainty(args.predictions)
     if args.predictions:
@@ -281,9 +281,9 @@ def main():
     else:
         print("no --predictions given; boundary stratum will be drawn at random")
 
-    random_rows = stratified_random(labeled, args.n_random, rng)
+    random_rows = stratified_random(labelled, args.n_random, rng)
     chosen_ids = {r["id"] for r in random_rows}
-    boundary_rows = boundary_sample(labeled, args.n_boundary, rng, uncertainty, chosen_ids)
+    boundary_rows = boundary_sample(labelled, args.n_boundary, rng, uncertainty, chosen_ids)
 
     for row in random_rows:
         row["stratum"] = "random"
@@ -293,9 +293,9 @@ def main():
 
     # Inclusion probability per stratum, so agreement.py can reweight the
     # boundary-enriched sample back to a population estimate.
-    n_boundary_pool = len([r for r in labeled if r["gold"] in BOUNDARY_LABELS])
+    n_boundary_pool = len([r for r in labelled if r["gold"] in BOUNDARY_LABELS])
     weights = {
-        "random": len(labeled) / len(random_rows) if random_rows else None,
+        "random": len(labelled) / len(random_rows) if random_rows else None,
         "boundary": n_boundary_pool / len(boundary_rows) if boundary_rows else None,
     }
 

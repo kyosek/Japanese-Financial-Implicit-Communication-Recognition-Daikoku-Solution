@@ -24,7 +24,7 @@
 # (stage 3) or the vote *spread* rather than the majority (stage 3b).
 #
 # Set RUNS to a glob of other prediction files to enable stage 3b, which
-# localizes the same error from run disagreement alone and cross-checks the
+# localises the same error from run disagreement alone and cross-checks the
 # adjudicator. Two independent detectors agreeing is worth more than either.
 #
 # Scope limit, stated because it bounds what stage 4 means: the quota can only

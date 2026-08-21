@@ -5,7 +5,7 @@ two diagnostics free generation can't give you:
 
 - rank of the gold label within the model's own 5-way probability ranking.
   If gold is consistently ranked #2 but rarely argmax, that's a
-  prior/calibration problem (the model favors an adjacent label by a hair),
+  prior/calibration problem (the model favours an adjacent label by a hair),
   not a comprehension failure -- a very different fix than if gold is
   consistently ranked #4-5.
 - mean P(gold) per gold label, a quick calibration signal alongside the

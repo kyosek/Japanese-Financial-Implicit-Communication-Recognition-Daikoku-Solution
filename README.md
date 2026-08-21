@@ -45,7 +45,7 @@ JF-ICR_test_participant.parquet
         │                     comparative question the quota licenses, voted
         │                     over rotated candidate orderings
         │
-  3b ── consensus.py ──────── (optional) localize the same errors from
+  3b ── consensus.py ──────── (optional) localise the same errors from
         │                     cross-run disagreement, and cross-check 3
         │
    4 ── quota_audit.py ────── re-audit: the corrected counts must meet the
@@ -118,7 +118,7 @@ decide it.
 **Stage 3b — the vote *spread* works where the majority doesn't.** Inside the
 flagged `+2` bucket, 10 of the 11 candidates are unanimous at 16/16 and id=300
 is the sole exception at 12/16. Minimum-consensus inside a quota-flagged
-bucket localizes the error exactly, with no extra model call. It's cheaper
+bucket localises the error exactly, with no extra model call. It's cheaper
 than stage 3 when several runs already exist, and the pipeline aborts if the
 two detectors disagree about which items to flip.
 
@@ -241,7 +241,7 @@ every model tried, so it is not in the submission.
 | Qwen3.8-27B (`Qwen3.8-27B-UD-Q4_K_XL.gguf`) | ~17GB | successor generation, unsloth dynamic quant; did not beat qwen3.6 here |
 | [gemma-4-12b-it](https://huggingface.co/unsloth/gemma-4-12b-it-GGUF) (Q8_0) | ~13GB | dense 12B, hybrid local/global attention, reasoning by default |
 | [Qwen3-30B-A3B-Instruct-2507](https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507) (Q4_K_M) | ~19GB | MoE, ~3B active |
-| [shisa-v2-qwen2.5-32b](https://huggingface.co/shisa-ai/shisa-v2-qwen2.5-32b) (Q4_K_M) | ~20GB | Japanese-specialized fine-tune of Qwen2.5-32B |
+| [shisa-v2-qwen2.5-32b](https://huggingface.co/shisa-ai/shisa-v2-qwen2.5-32b) (Q4_K_M) | ~20GB | Japanese-specialised fine-tune of Qwen2.5-32B |
 | [gpt-oss-20b](https://huggingface.co/openai/gpt-oss-20b) (F16/native MXFP4) | ~14GB | OpenAI open-weight reasoning model (harmony format) |
 | [DeepSeek-R1-Distill-Qwen-32B](https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-32B-GGUF) (Q4_K_M) | ~20GB | dense 32B — always reasons, no non-thinking mode |
 | Claude Opus | API | run for comparison; strongest macro-F1 on the public set |
@@ -290,7 +290,7 @@ Accuracy and macro-F1 both treat the five labels as unordered, which misreads
 the task twice: the labels are an ordinal scale (confusing `+1` with `+2` is a
 smaller error than `+1` with `-2`), and the public set is skewed enough that
 always answering `+1` already scores 0.549 accuracy and 0.949 within-one.
-**Quadratic weighted kappa** fixes both — errors are penalized by squared
+**Quadratic weighted kappa** fixes both — errors are penalised by squared
 distance along the scale, and chance correction puts the always-majority
 baseline at exactly 0.0. `bench/metrics.py` holds the shared implementation;
 `bench/compare.py` lines up accuracy / macro-F1 / QWK across report files.
@@ -398,7 +398,7 @@ noise floor on n=253; treat the ordering as unresolved.**
 
 ---
 
-## Log-prob verbalizer scoring
+## Log-prob verbaliser scoring
 
 `bench/solve_logprob.py` scores each of the 5 label strings directly —
 P(label | prompt) via teacher-forced token log-probs against llama.cpp's raw
@@ -442,7 +442,7 @@ accuracy up side by side.
 P(y|x) — pure post-processing, no extra LLM calls, no gold labels:
 
 - `--method batch` — batch calibration (Zhou et al. 2023): divide each row's
-  P(y|x) by the mean predicted distribution across the test set, renormalize.
+  P(y|x) by the mean predicted distribution across the test set, renormalise.
 - `--method sld-em` — Saerens–Latinne–Decock (2002) EM prior adaptation:
   iterate the correction to a self-consistent fixed point rather than applying
   it once. `--prior-floor` guards the rare-class instability.
@@ -596,7 +596,7 @@ weakness and how much is irreducible label ambiguity, because the public set
 has one label per item and no measured human agreement.
 
 `make_annotation_subsample.py` draws a stratified subsample for blind
-multi-annotator re-labeling — a `random` stratum (proportionally stratified
+multi-annotator re-labelling — a `random` stratum (proportionally stratified
 over gold, for unbiased population estimates) and a `boundary` stratum (drawn
 from the adjacent label pairs that account for most errors; `+1`/`0` and
 `+1`/`+2` are 74 of gemma4's 94 public-set errors). The boundary stratum is
@@ -703,10 +703,10 @@ Several results here are reported as measured nulls for that reason.
 ```text
 bench/
   solve.py                # free generation: one server call per row, zero- or few-shot
-  solve_logprob.py        # verbalizer log-prob scoring (argmax + Sigma k*P(k)) — pipeline stage 1
-  quota_audit.py          # provable error floor + bucket localization from the class quota — stage 2
+  solve_logprob.py        # verbaliser log-prob scoring (argmax + Sigma k*P(k)) — pipeline stage 1
+  quota_audit.py          # provable error floor + bucket localisation from the class quota — stage 2
   adjudicate.py           # forced-choice comparative adjudication inside a flagged bucket — stage 3
-  consensus.py            # localize the same errors from cross-run disagreement — stage 3b
+  consensus.py            # localise the same errors from cross-run disagreement — stage 3b
   make_submission.py      # validated submission CSV — stage 5
   evaluate.py             # accuracy + macro-F1 + QWK + within-one + confusion matrix
   evaluate_logprob.py     # the above + gold-label rank histogram / calibration
@@ -719,7 +719,7 @@ bench/
   prompt_sensitivity.py   # rule-paraphrase x seed and label-order robustness probes
   rule_paraphrases.py     # 5 semantically-equivalent paraphrases of the Appendix A.3 rules
   label_orders.py         # label-listing-order permutations + the prompt-rewrite function
-  make_annotation_subsample.py  # stratified sheets for blind multi-annotator re-labeling
+  make_annotation_subsample.py  # stratified sheets for blind multi-annotator re-labelling
   agreement.py            # score returned sheets: human ceiling, Krippendorff alpha, plural gold
   solve_majority.py       # non-LLM baseline: always predict the most common gold label
   solve_lexicon.py        # non-LLM baseline: hedging/modality cue counts + logistic regression, k-fold CV

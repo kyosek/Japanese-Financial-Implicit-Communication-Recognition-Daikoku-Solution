@@ -14,7 +14,7 @@ label is identical to plain argmax on all 50 items.
 But the vote *spread* is informative even where the majority is not. Within
 the quota-flagged `+2` bucket, 10 of the 11 candidates are unanimous at 16/16;
 id=300 is the sole exception at 12/16. So minimum-consensus inside the flagged
-bucket localizes the error exactly, and bench/consensus.py does that with no
+bucket localises the error exactly, and bench/consensus.py does that with no
 extra model call. Prefer it when several runs already exist.
 
 This script covers the case where they do not, or where consensus leaves a tie.
@@ -27,7 +27,7 @@ majority -- it consumes the quota certificate and asks a comparative question:
 Three things make this easier than the original task. It is forced choice
 over a shortlist rather than open 5-way classification; it is comparative, so
 the items calibrate each other instead of each being judged against an
-internalized threshold; and it is told the answer exists, which blocks the
+internalised threshold; and it is told the answer exists, which blocks the
 "they all look like commitments" failure that produced the error in the first
 place. A model that is confidently wrong item-by-item can still rank the odd
 one out correctly, because ranking does not require the absolute threshold

@@ -1,4 +1,4 @@
-"""Use a known test-set class quota to bound, localize, and audit label errors.
+"""Use a known test-set class quota to bound, localise, and audit label errors.
 
 The JF-ICR test split is published as exactly balanced: 10 items per label
 across the 50, 3 per label in the public 15 and 7 per label in the private 35.
@@ -15,7 +15,7 @@ Three things the quota gives you, none of which need gold labels:
    This is a certificate, not an estimate: no labelling with those counts can
    do better, whatever the true labels are.
 
-2. Localization. The over-predicted classes name the buckets the surplus
+2. Localisation. The over-predicted classes name the buckets the surplus
    errors live in. An item predicted y where n_y > q_y is a suspect; an item
    predicted y where n_y == q_y is not implicated by the counts at all. On a
    50-item set that typically cuts the audit surface by 70-80%.
@@ -47,7 +47,7 @@ per-label probabilities. We measured it. It is worse than plain argmax:
 The reason is structural. A min-cost assignment buys its required class counts
 as cheaply as possible, so it flips the items with the *smallest* margin --
 it assumes errors sit near the decision boundary. The errors that a strong
-verbalizer model actually makes on this task are confidently wrong. On the
+verbaliser model actually makes on this task are confidently wrong. On the
 test set the single real error was id=300, where the model put 0.897 on `+2`
 and 0.005 on the true label `0`; the assignment would not touch it, and paid
 for its quota by corrupting id=288 (a correct `+1` at margin 0.369 vs 0.309)
@@ -196,7 +196,7 @@ def main() -> None:
         contested = [i for i in suspects if i in second and second[i] != preds[i]]
         print(f"\nadjudication targets -- suspect AND contradicted by {args.second_opinion}:")
         if not contested:
-            print("  none; the second opinion corroborates every suspect, so it cannot localize the error")
+            print("  none; the second opinion corroborates every suspect, so it cannot localise the error")
         for i in contested:
             line = f"  id={i}  predicted={preds[i]}  second-opinion={second[i]}"
             if i in probs:

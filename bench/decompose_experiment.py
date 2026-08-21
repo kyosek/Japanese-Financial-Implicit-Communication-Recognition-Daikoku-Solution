@@ -19,7 +19,7 @@ ambiguity could be hiding rather than assuming it lives in the question:
      sub-asks, and the characteristic move is to answer A at length while
      declining B by never mentioning it. The coverage probe asks, per
      sub-question, whether the response addresses it at all; unaddressed
-     pieces are where decomposition invents a labeling decision that the
+     pieces are where decomposition invents a labelling decision that the
      joint framing never had to make.
 
   3. AGGREGATION -- if the sub-labels diverge, the single benchmark label
@@ -28,7 +28,7 @@ ambiguity could be hiding rather than assuming it lives in the question:
      reproduces the annotator" becomes an answerable question instead of a
      guess.
 
-The decisive comparison is DECOMPOSE-THEN-AGGREGATE vs. JOINT labeling by the
+The decisive comparison is DECOMPOSE-THEN-AGGREGATE vs. JOINT labelling by the
 same model, at the same settings, on the same items: if no aggregation rule
 beats the joint label, decomposition is relocating the ambiguity, not removing
 it. SINGLE-part control items are run through the identical pipeline -- if
@@ -181,7 +181,7 @@ def aggregate(labels):
     top = max(counts.values())
     modal_candidates = [l for l, c in counts.items() if c == top]
     mean_rank = sum(ranks) / len(ranks)
-    # Tie-break the mode toward the piece closest to the item's centre of mass,
+    # Tie-break the mode towards the piece closest to the item's centre of mass,
     # so a 2-way tie doesn't resolve on dict insertion order.
     modal = min(modal_candidates, key=lambda l: (abs(LABEL_RANK[l] - mean_rank), -LABEL_RANK[l]))
     return {
@@ -322,7 +322,7 @@ def run_item(row, args):
     }
 
 
-def summarize(results, rows_all):
+def summarise(results, rows_all):
     """Everything the experiment is meant to answer, as a report dict."""
     n_all = len(rows_all)
     n_multi_all = sum(1 for r in rows_all if r["heuristic_multi"])
@@ -446,7 +446,7 @@ def print_report(report):
             shown = f"{entry['rate']:.1%}" if entry["rate"] is not None else "n/a"
             print(f"    {name:16s} n={entry['n']:3d}  divergence={shown}")
 
-        print("\n-- 4. does decompose-then-aggregate beat labeling jointly? --")
+        print("\n-- 4. does decompose-then-aggregate beat labelling jointly? --")
         for scope in ("all items", "items the LLM actually split"):
             data = block if scope == "all items" else block.get("split_only")
             if not data:
@@ -454,7 +454,7 @@ def print_report(report):
             print(f"  [{scope}]")
             joint = data["joint_vs_gold"]
             if joint["accuracy"] is None:
-                print("    joint: no gold-labeled items")
+                print("    joint: no gold-labelled items")
                 continue
             print(f"    {'joint (no split)':<18} n={joint['n']:3d}  "
                   f"acc={joint['accuracy']:.4f}  within1={joint['within_one']:.4f}  qwk={joint['qwk']:.4f}")
@@ -514,7 +514,7 @@ def main():
             handle.write(json.dumps(result, ensure_ascii=False) + "\n")
             handle.flush()
 
-    report = summarize(results, rows)
+    report = summarise(results, rows)
     print_report(report)
 
     report_path = Path(args.report)

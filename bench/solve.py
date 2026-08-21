@@ -1,7 +1,7 @@
 """Run every JF-ICR prompt through a local llama.cpp server and save predictions.
 
 Each row's `query` is already a complete zero-shot prompt (fixed instructions
-+ the Q&A pair + an output reminder). For few-shot, we splice a few labeled
++ the Q&A pair + an output reminder). For few-shot, we splice a few labelled
 exemplars' Q&A blocks in between the instructions and the target question,
 reusing the dataset's own template rather than inventing new wording.
 
@@ -87,7 +87,7 @@ use these linguistic signals and examples to decide the label:
 # so with no rule stated the label depends entirely on which piece the reader
 # weights. bench/decompose_experiment.py scored the candidate rules against
 # gold: taking the most committal piece tracked the annotators best
-# (QWK 0.555 vs 0.285 for labeling the bundle jointly, n=31), and taking the
+# (QWK 0.555 vs 0.285 for labelling the bundle jointly, n=31), and taking the
 # most hedged piece was worst (0.249). Appended after ANNOTATION_RULES by
 # inject_annotation_rules(); disable with --no-multipart-rule.
 MULTIPART_RULE = """Handling a question that bundles several asks:
@@ -137,7 +137,7 @@ def extract_label(raw_text: str) -> str | None:
 
     Models are asked to output only the label, but instruction-following
     isn't perfect (extra whitespace, stray punctuation, occasional reasoning
-    leakage) -- taking the *last* match favors a trailing final answer over
+    leakage) -- taking the *last* match favours a trailing final answer over
     incidental +N/-N-shaped text earlier in any reasoning.
     """
     matches = LABEL_PATTERN.findall(raw_text.strip())
